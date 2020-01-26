@@ -1,28 +1,32 @@
 ---
 title             : "Improving Transparency, Falsifiability, and Rigour by Making Hypothesis Tests Machine Readable"
-shorttitle        : "Machine-readable Hypotheses"
+shorttitle        : "Machine Readable Hypotheses"
 author: 
-  - name          : "Lisa M. DeBruine"
+  - name          : "Daniël Lakens"
     affiliation   : "1"
     corresponding : yes
-    address       : "62 Hillhead Street, Glasgow, G12 8QB"
-    email         : "lisa.debruine@glasgow.ac.uk"
-  - name          : "Daniël Lakens"
-    affiliation   : "2"
+    address       : "ATLAS 9.402, 5600 MB, Eindhoven, The Netherlands"
     email         : "D.Lakens@tue.nl"
+  - name          : "Lisa M. DeBruine"
+    affiliation   : "2"
+    email         : "lisa.debruine@glasgow.ac.uk"
 affiliation:
   - id            : "1"
-    institution   : "Institute of Neuroscience and Psychology, University of Glasgow"
-  - id            : "2"
     institution   : "School of Innovation Sciences, Eindhoven University of Technology"
+  - id            : "2"
+    institution   : "Institute of Neuroscience and Psychology, University of Glasgow"
 
 authornote: |
+  Both authors contributed equally to the manuscript. First authorship was determined based on a Great League trainer battle between the authors in Pokemon Go.
   
-  Lisa DeBruine ![](images/orcid.png) https://orcid.org/0000-0002-7523-5539  
-  Daniël Lakens ![](images/orcid.png) https://orcid.org/0000-0002-0247-239X
+  Lisa DeBruine ![](images/orcid.png) https://orcid.org/0000-0002-7523-5539. 
+  
+  Daniël Lakens ![](images/orcid.png) https://orcid.org/0000-0002-0247-239X.
+  
 abstract: |
+  Making scientific information machine-readable greatly facilitates its re-use. Here we outline an approach to make hypothesis tests machine readable. We believe that if statistical predictions are specified in a way that a computer can evaluate whether the prediction is supported or not has two benefits. First, hypothesis test will become more transparent, falsifiable, and rigorous. Second, scientists will benefit if information related to hypothesis tests in scientific articles is easily findable and re-usable, for example when performing meta-analyses, during peer review, and when examining meta-scientific research questions. We examine what a machine readable hypothesis test should looks like, and demonstrate the feasibility of machine readable hypothesis tests in a real-life example. 
   
-keywords          : "hypothesis testing"
+keywords          : "hypothesis testing, machine readability, metadata, scholarly communication"
 wordcount         : ""
 bibliography      : ["bibliography.bib", "r-references.bib"]
 floatsintext      : yes
@@ -100,7 +104,8 @@ The support (40-44) and falsify (45-49) sub-components describe rules to determi
 
 Each analysis is specified in the analysis component (52-81). An analysis consists of an id to reference the statistical test when evaluating the criteria, a reference to the function or script used to run the analysis (func), a list of parameters that need to be specified in the function (params), and a list of named results to be referenced in the criteria. Each analysis can also contain additional information, such as the software used to perform the analysis. The example below specifies two t-tests, using the "t.test" function in R (version 3.6.0). For each t-test, we need to specify values for "x" and "y" (columns in a dataset called "kin"), "paired" (the type of t-test), and "conf.level" (to change the default value for this test to .99). 
 
-Each dataset can be specified in the data component (82-112). A dataset consists of an id to reference the dataset in analyses and information about how to obtain the data (e.g., doi, url). The codebook (87-104) contains descriptions of each column, and it is even possible to include the data values (105-110) in this component. Below, we present a simple version of a codebook, but the descriptors for each column can be arbitrarily detailed and automatically extracted from existing data structures, such as SPSS files.
+Each dataset can be specified in the data component (82-112). A dataset consists of an id to reference the dataset in analyses and information about how to obtain the data (e.g., doi, url). The codebook (87-104) contains descriptions of each column, and it is even possible to include the data values (105-110) in this component. Below, we present a simple version of a codebook, but the descriptors for each column can be arbitrarily detailed and automatically extracted from existing data structures, such as SPSS files. For software that helps researchers to share machine-readable codebooks, see @arslan2019.
+\newpage
 
 ### Box 1. Example JSON file illustrating a machine-readable statistical prediction.
 
@@ -130,19 +135,24 @@ One more immediate use case for machine readable hypothesis tests is the Registe
 
 ## Conclusions
 
-Technological innovation makes it possible to communicate scientific information in digital formats that facilitate the use of this information. It is becoming increasingly accepted to expect that researchers share their data in a way that is FAIR (findable, accessible, interoperable, and reusable). This can only be accomplished by providing meta-data alongside the data files, and software that helps researchers to share machine-readable meta-data is being developed [e.g., @arslan2019]. We believe it is feasible and beneficial to make statistical predictions machine readable as well. This is a logical next step, with immediate benefits for the rigour of hypothesis tests, and the accessibility of important information related to hypothesis tests in scientific paper. Making statistical predictions machine readable is a logical next step towards a scientific literature that can be accessed not just visually, but computationally. 
+Technological innovation makes it possible to communicate scientific findings in digital formats that allow for much easier re-use of scientific information contained in these digital files compared to traditional journal articles. As we move towards a time where researchers are expected to share their data in a way that is FAIR (findable, accessible, interoperable, and reusable), we believe it is feasible and beneficial to make statistical predictions machine readable as well. This is a logical development, with immediate benefits for the rigour of hypothesis tests. Increasing the accessibility of essential information related to hypothesis tests in scientific paper will also facilitate peer review, especially of Registered Reports, and facilitate meta-scientific research. Making statistical predictions machine readable will be an important  next step towards a scientific literature that can be accessed not just visually, but also computationally.
 
+\newpage
 
-# Acknowledgements
+### Acknowledgements
+We would like to thank Leo Tiokhin and Peder Isager for feedback on an earlier draft of this manuscript, and attendants of a hackathon at the Society for the Improvement of Psychological Science for their enthusiastic reception of the ideas behind machine readable hypotheses.
+
 
 ### Author Contributions
+Both authors conceptualized the main idea, LMD wrote the Scienceverse software, and both authors wrote and revised this manuscript.
 
 
 ### Declaration of Conflicting Interests
 The author(s) declared that there were no conflicts of interest with respect to the authorship or the publication of this article.
 
+
 ### Funding
-LMD is supported by European Research Council grant #647910.
+LMD is supported by European Research Council grant #647910. DL is funded by VIDI Grant 452-17-013 from the Netherlands Organisation for Scientific Research.
 
 
 \newpage
