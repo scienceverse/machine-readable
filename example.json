@@ -37,8 +37,8 @@
           "conclusion": false
         }
       ],
-      "support": {
-        "description": "The hypothesis is supported if the 97.5% CI lower bound is greater than 0 and the 97.5% CI upper bound is greater than 0.2 (the SESOI) for either the trust or reciprocation moves.",
+      "corroboration": {
+        "description": "The hypothesis is corroborated if the 97.5% CI lower bound is greater than 0 and the 97.5% CI upper bound is greater than 0.2 (the SESOI) for either the trust or reciprocation moves.",
         "evaluation": "(trust_lowbound & trust_highbound) | (recip_lowbound & recip_highbound)",
         "conclusion": true
       },

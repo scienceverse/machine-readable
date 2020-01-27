@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.2.8)  26 JAN 2020 18:35
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6930 64-bit) (preloaded format=pdflatex 2019.2.8)  27 JAN 2020 12:11
 entering extended mode
 **./mr.tex
 (mr.tex
@@ -861,30 +861,30 @@ Package pdftex.def Info: images/orcid.png  used on input line 116.
 
 {C:/Users/dlakens/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./images/
 orcid.png>] [2] [3] [4]
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 149.
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 152.
 
 ("C:\Program Files\MiKTeX 2.9\tex/latex/lm\t1lmtt.fd"
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [5]
-Overfull \hbox (9.03249pt too wide) in paragraph at lines 283--283
+) [5] [6]
+Overfull \hbox (9.03249pt too wide) in paragraph at lines 286--286
 []  \T1/lmtt/m/n/10.95 5.       "description": "Cues of kinship will increase p
 rosocial behaviour.[] 
  []
 
 
-Overfull \hbox (20.52995pt too wide) in paragraph at lines 283--283
+Overfull \hbox (20.52995pt too wide) in paragraph at lines 286--286
 []              \T1/lmtt/m/n/10.95 resemblance. Prosocial behaviour will be mea
 sured by responses in[] 
  []
 
 
-Overfull \hbox (26.27869pt too wide) in paragraph at lines 283--283
+Overfull \hbox (26.27869pt too wide) in paragraph at lines 286--286
 []              \T1/lmtt/m/n/10.95 the trust game. The prediction is that the n
 umber of trusting AND/[] 
  []
 
 
-Overfull \hbox (32.02742pt too wide) in paragraph at lines 283--283
+Overfull \hbox (32.02742pt too wide) in paragraph at lines 286--286
 []              \T1/lmtt/m/n/10.95 OR reciprocating moves will be greater to se
 lf morphs than to other[] 
  []
@@ -892,32 +892,32 @@ lf morphs than to other[]
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[6]
-Overfull \hbox (14.78122pt too wide) in paragraph at lines 283--283
-[] \T1/lmtt/m/n/10.95 41.         "description": "The hypothesis is supported i
-f the 97.5% CI lower[] 
+[7]
+Overfull \hbox (32.02742pt too wide) in paragraph at lines 286--286
+[] \T1/lmtt/m/n/10.95 41.         "description": "The hypothesis is corroborate
+d if the 97.5% CI lower[] 
  []
 
 
-Overfull \hbox (37.77615pt too wide) in paragraph at lines 283--283
+Overfull \hbox (37.77615pt too wide) in paragraph at lines 286--286
 []              \T1/lmtt/m/n/10.95 bound is greater than 0 and the 97.5% CI upp
 er bound is greater than[] 
  []
 
 
-Overfull \hbox (3.28375pt too wide) in paragraph at lines 283--283
+Overfull \hbox (3.28375pt too wide) in paragraph at lines 286--286
 []              \T1/lmtt/m/n/10.95 0.2 (the SESOI) for either the trust or reci
 procation moves.",[] 
  []
 
 
-Overfull \hbox (37.77615pt too wide) in paragraph at lines 283--283
+Overfull \hbox (37.77615pt too wide) in paragraph at lines 286--286
 [] \T1/lmtt/m/n/10.95 42.         "evaluation": "(trust_lowbound & trust_highbo
 und) | (recip_lowbound &[] 
  []
 
 
-Overfull \hbox (3.28375pt too wide) in paragraph at lines 283--283
+Overfull \hbox (3.28375pt too wide) in paragraph at lines 286--286
 []              \T1/lmtt/m/n/10.95 upper bound is smaller than 0.2 (the SESOI) 
 for both trust and[] 
  []
@@ -925,50 +925,50 @@ for both trust and[]
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[7]
-Overfull \hbox (3.28375pt too wide) in paragraph at lines 283--283
+[8]
+Overfull \hbox (3.28375pt too wide) in paragraph at lines 286--286
 [] \T1/lmtt/m/n/10.95 90.           "description": "Number of trusting moves to
 wards self-morphs"[] 
  []
 
 
-Overfull \hbox (3.28375pt too wide) in paragraph at lines 283--283
+Overfull \hbox (3.28375pt too wide) in paragraph at lines 286--286
 [] \T1/lmtt/m/n/10.95 94.           "description": "Number of trusting moves to
 wards self-morphs"[] 
  []
 
 
-Overfull \hbox (37.77615pt too wide) in paragraph at lines 283--283
+Overfull \hbox (37.77615pt too wide) in paragraph at lines 286--286
 [] \T1/lmtt/m/n/10.95 98.           "description": "Number of reciprocating mov
 es towards other-morphs"[] 
  []
 
 
-Overfull \hbox (37.77615pt too wide) in paragraph at lines 283--283
+Overfull \hbox (37.77615pt too wide) in paragraph at lines 286--286
 []\T1/lmtt/m/n/10.95 102.           "description": "Number of reciprocating mov
 es towards other-morphs"[] 
  []
 
 
-Overfull \hbox (9.03249pt too wide) in paragraph at lines 283--283
+Overfull \hbox (9.03249pt too wide) in paragraph at lines 286--286
 []\T1/lmtt/m/n/10.95 106.         "trust_self": [1,2,2,1,1,1,1,1,2,0,2,0,1,2,2,
 3,2,2,1,1,2,0,0,1],[] 
  []
 
 
-Overfull \hbox (14.78122pt too wide) in paragraph at lines 283--283
+Overfull \hbox (14.78122pt too wide) in paragraph at lines 286--286
 []\T1/lmtt/m/n/10.95 107.         "trust_other": [1,2,2,0,1,0,0,0,1,0,1,0,1,1,1
 ,0,1,2,2,0,0,0,2,1],[] 
  []
 
 
-Overfull \hbox (9.03249pt too wide) in paragraph at lines 283--283
+Overfull \hbox (9.03249pt too wide) in paragraph at lines 286--286
 []\T1/lmtt/m/n/10.95 108.         "recip_self": [0,1,3,2,1,1,1,3,3,2,3,1,1,2,3,
 3,3,1,1,1,3,0,3,1],[] 
  []
 
 
-Overfull \hbox (9.03249pt too wide) in paragraph at lines 283--283
+Overfull \hbox (9.03249pt too wide) in paragraph at lines 286--286
 []\T1/lmtt/m/n/10.95 109.         "recip_other": [1,1,2,2,3,2,1,3,3,1,3,0,1,3,3
 ,3,3,0,3,0,1,0,3,2][] 
  []
@@ -976,24 +976,24 @@ Overfull \hbox (9.03249pt too wide) in paragraph at lines 283--283
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[8] [9] [10] [11]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 359.
-[12]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 359.
+[9] [10] [11] [12]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 362.
+[13]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 362.
 (mr.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 359.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 359.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 362.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 362.
 Package rerunfilecheck Info: File `mr.out' has not changed.
 (rerunfilecheck)             Checksum: C018A599B6842330ADACAAAF145B3E39;2348.
  ) 
 Here is how much of TeX's memory you used:
- 15446 strings out of 492946
- 229708 string characters out of 3135522
- 349807 words of memory out of 3000000
+ 15449 strings out of 492946
+ 229745 string characters out of 3135522
+ 348988 words of memory out of 3000000
  18919 multiletter control sequences out of 15000+200000
- 104275 words of font info for 156 fonts, out of 3000000 for 9000
+ 104499 words of font info for 157 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 43i,10n,47p,2265b,524s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 43i,10n,47p,2075b,524s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.enc}<C:/Program Files/M
 iKTeX 2.9/fonts/type1/public/lm/lmbx10.pfb><C:/Program Files/MiKTeX 2.9/fonts/t
 ype1/public/lm/lmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm/lmr
@@ -1002,9 +1002,9 @@ ype1/public/lm/lmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm/lmr
 onts/type1/public/lm/lmr9.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/l
 m/lmri10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/lm/lmss8.pfb><C:/P
 rogram Files/MiKTeX 2.9/fonts/type1/public/lm/lmtt10.pfb>
-Output written on mr.pdf (12 pages, 287919 bytes).
+Output written on mr.pdf (13 pages, 289639 bytes).
 PDF statistics:
- 182 PDF objects out of 1000 (max. 8388607)
- 44 named destinations out of 1000 (max. 500000)
+ 187 PDF objects out of 1000 (max. 8388607)
+ 45 named destinations out of 1000 (max. 500000)
  14430 words of extra memory for PDF output out of 17280 (max. 10000000)
 
