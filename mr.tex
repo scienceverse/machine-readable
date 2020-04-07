@@ -97,9 +97,9 @@
 \textsuperscript{1} School of Innovation Sciences, Eindhoven University of Technology\\\textsuperscript{2} Institute of Neuroscience and Psychology, University of Glasgow}
 \authornote{Both authors contributed equally to the manuscript. First authorship was determined based on a Great League trainer battle between the authors in Pokemon Go.
 
-Lisa DeBruine ![](images/orcid.png) https://orcid.org/0000-0002-7523-5539. 
+Lisa DeBruine  https://orcid.org/0000-0002-7523-5539. 
 
-Daniël Lakens ![](images/orcid.png) https://orcid.org/0000-0002-0247-239X.
+Daniël Lakens  https://orcid.org/0000-0002-0247-239X.
 
 
 Correspondence concerning this article should be addressed to Daniël Lakens, ATLAS 9.402, 5600 MB, Eindhoven, The Netherlands. E-mail: D.Lakens@tue.nl}
@@ -109,6 +109,10 @@ Correspondence concerning this article should be addressed to Daniël Lakens, AT
 
 \linenumbers
 \usepackage{csquotes}
+\usepackage{float}
+\floatplacement{figure}{H}
+\raggedbottom
+\usepackage{tcolorbox}
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[shorthands=off,main=english]{babel}
 \else
@@ -159,154 +163,259 @@ Another approach compares the likelihood of the observed data under null and the
 
 If a prediction is machine readable, it is possible to automatically determine if a prediction is corroborated by the data. We envision machine readable hypothesis tests as part of a completely reproducible workflow. Computer scripts will load the raw data, and if needed create the analytic data from the raw data (e.g., outlier removal, transformations, computing sum scores according to pre-specified rules). The statistical test is automatically run on the analytic data, and the relevant test statistics are retrieved. These test statistics are compared against pre-specified criteria, based on decision rules that evaluate whether the prediction is corroborated, falsified, or inconclusive. All the information that is required to perform these operations is stored in a structured meta-data file.
 
-Box 1 provides a concrete example of a machine-readable statistical prediction for the study by DeBruine (2002) described above. It is written using JSON, which is an open-standard file format that can be used to transmit data. Because it is an open-standard file format, it can easily be converted into any other data file format such as YAML or JATS, which in essence are all nested lists. It can also be converted to a human-readable report, summarising the study with verbal descriptions and a list containing the conclusion for each statistical prediction.
+We provide an \href{example/example.Rmd}{R script} with a concrete example of a machine-readable statistical prediction for the study by DeBruine (2002) described above. It is written using the R package \href{https://scienceverse.github.io/scienceverse/}{\textbf{scienceverse}} and produces a \href{example/postreg.json}{JSON file}, which is an open-standard file format that can be used to transmit data. Because it is an open-standard file format, it can easily be converted into any other data file format such as YAML or JATS, which in essence are all nested lists. It can also be converted to a \href{example/postreg.html}{human-readable report}, summarising the study with verbal descriptions and a list containing the conclusion for each statistical prediction.
 
-The top level list contains components describing different aspects of the study, such as authors, hypotheses, materials, methods, data, and analyses. In the future we might be able to describe all information in a scientific article that we would like to be able to retrieve, but here we will focus on the aspects of the study that are required to make statistical predictions machine readable. To achieve this, we need a meta-data file that specifies the hypotheses, the analyses, and the evaluation criteria for each prediction.
+The top level list (Box 1) contains components describing different aspects of the study, such as authors, hypotheses, materials, methods, data, and analyses. In the future we might be able to describe all information in a scientific article that we would like to be able to retrieve, but here we will focus on the aspects of the study that are required to make statistical predictions machine readable. To achieve this, we need a meta-data file that specifies the hypotheses, the analyses, and the evaluation criteria for each prediction.
 
-A study could contain multiple hypotheses, but our example contains only one. Each \texttt{hypothesis} (Box 1, lines 3-50) consists of a verbal human-readable description (5), one or more \texttt{criteria} (6-39) to evaluate analysis results, and rules to determine if the results \texttt{corroborate} (40-44) or \texttt{falsify} (45-49) the hypothesis that is automatically generated if the data is available. Criteria need an \texttt{id} to be able to reference them in the evaluations. An \texttt{operator} and a \texttt{comparator} are provided for each criterion to specify the method of comparison (e.g., \textgreater{}, \textless{}, =, !=) and the comparison value (e.g., 0). For example, the first criterion (7-14) specifies that if the statistical result \enquote{conf.int{[}1{]}} from \enquote{trust\_analysis} is \enquote{\textgreater{}} than \enquote{0} then the criterion \enquote{trust\_lowbound} evaluates to \enquote{true}. In other words, if we can statistically reject the null hypothesis (because the lower bound of the confidence interval does not overlap with 0), this criterion of our statistical prediction is corroborated.
-
-The \texttt{corroborate} (40-44) and \texttt{falsify} (45-49) sub-components describe rules to determine corroborate or falsification from the criteria conclusions, and consist of three elements. The \texttt{description} element contains verbal descriptions of the decision rules for concluding the hypothesis is corroborated or falsified. The \texttt{evaluation} element contains a logical version referencing the criteria IDs. For example, \enquote{\texttt{(trust\_lowbound\ \&\ trust\_highbound)\ \textbar{}\ (recip\_lowbound\ \&\ recip\_highbound)}} (42) means that the corroboration conclusion (43) will be set to \enquote{true} if the first two criteria are both true, or if the last two criteria are both true, while \enquote{\texttt{!trust\_highbound\ \&\ !recip\_highbound}} (47) means that the falsify conclusion (48) will be set to \enquote{true} if both of these criteria are false.
-
-Each analysis is specified in the \texttt{analysis} component (52-81). An analysis consists of an \texttt{id} to reference the statistical test when evaluating the criteria, a reference to the function or script used to run the analysis (\texttt{func}), a list of parameters that need to be specified in the function (\texttt{params}), and a list of named \texttt{results} to be referenced in the criteria. Each analysis can also contain additional information, such as the software used to perform the analysis. The example below specifies two \emph{t}-tests, using the \texttt{t.test} function in R (version 3.6.0). For each \emph{t}-test, we need to specify values for \enquote{x} and \enquote{y} (columns in a dataset called \enquote{kin}), \enquote{paired} (the type of \emph{t}-test), and \enquote{conf.level} (to change the default value for this test to .975).
-
-Each dataset can be specified in the \texttt{data} component (82-112). A dataset consists of an \texttt{id} to reference the dataset in analyses and information about how to obtain the data (e.g., \texttt{doi}, \texttt{url}). The \texttt{codebook} (87-104) contains descriptions of each column, and it is even possible to include the analytic data \texttt{values} (105-110) in this component. Below, we present a simple version of a codebook, but the descriptors for each column can be arbitrarily detailed and automatically extracted from existing data structures, such as SPSS files. For software that helps researchers to share machine-readable codebooks, see Arslan (2019).
-\newpage
-
-\hypertarget{box-1.-example-json-file-illustrating-a-machine-readable-statistical-prediction.}{%
-\subsubsection{Box 1. Example JSON file illustrating a machine-readable statistical prediction.}\label{box-1.-example-json-file-illustrating-a-machine-readable-statistical-prediction.}}
-
+\begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 1. The top-level structure of the machine-readable study description.]
 \begin{verbatim}
-  1. {
-  2.   "name": "Kinship and Prosocial Behaviour",
-  3.   "hypotheses": [
-  4.     {
-  5.       "description": "Cues of kinship will increase prosocial behaviour.
-              Cues of kinship will be manipulated by morphed facial self-
-              resemblance. Prosocial behaviour will be measured by responses in
-              the trust game. The prediction is that the number of trusting AND/
-              OR reciprocating moves will be greater to self morphs than to other
-              morphs.",
-  6.       "criteria": [
-  7.         {
-  8.           "id": "trust_lowbound",
-  9.           "analysis_id": "trust_analysis",
- 10.           "result": "conf.int[1]",
- 11.           "operator": ">",
- 12.           "comparator": 0,
- 13.           "conclusion": true
- 14.         },
- 15.         {
- 16.           "id": "trust_highbound",
- 17.           "analysis_id": "trust_analysis",
- 18.           "result": "conf.int[2]",
- 19.           "operator": ">",
- 20.           "comparator": 0.2,
- 21.           "conclusion": true
- 22.         },
- 23.         {
- 24.           "id": "recip_lowbound",
- 25.           "analysis_id": "recip_analysis",
- 26.           "result": "conf.int[1]",
- 27.           "operator": ">",
- 28.           "comparator": 0,
- 29.           "conclusion": false
- 30.         },
- 31.         {
- 32.           "id": "recip_highbound",
- 33.           "analysis_id": "recip_analysis",
- 34.           "result": "conf.int[2]",
- 35.           "operator": ">",
- 36.           "comparator": 0.2,
- 37.           "conclusion": false
- 38.         }
- 39.       ],
- 40.       "corroboration": {
- 41.         "description": "The hypothesis is corroborated if the 97.5% CI lower
-              bound is greater than 0 and the 97.5% CI upper bound is greater than
-              0.2 (the SESOI) for either the trust or reciprocation moves.",
- 42.         "evaluation": "(trust_lowbound & trust_highbound) | (recip_lowbound &
-              recip_highbound)",
- 43.         "conclusion": true
- 44.       },
- 45.       "falsify": {
- 46.         "description": "The hypothesis is falsified if the 97.5% CI
-              upper bound is smaller than 0.2 (the SESOI) for both trust and
-              reciprocation.",
- 47.         "evaluation": "!trust_highbound & !recip_highbound",
- 48.         "conclusion": false
- 49.       }
- 50.     }
- 51.   ],
- 52.   "analyses": [
- 53.     {
- 54.       "id": "trust_analysis",
- 55.       "software": "R version 3.6.0 (2019-04-26)",
- 56.       "func": "t.test",
- 57.       "params": {
- 58.         "x": "kin$trust_self",
- 59.         "y": "kin$trust_non",
- 60.         "paired": true,
- 61.         "conf.level": 0.975
- 62.       },
- 63.       "results": {
- 64.         "conf.int": [0.02, 0.98]
- 65.       }
- 66.     },
- 67.     {
- 68.       "id": "recip_analysis",
- 69.       "software": "R version 3.6.0 (2019-04-26)",
- 70.       "func": "t.test",
- 71.       "params": {
- 72.         "x": "kin$recip_self",
- 73.         "y": "kin$recip_non",
- 74.         "paired": true,
- 75.         "conf.level": 0.975
- 76.       },
- 77.       "results": {
- 78.         "conf.int": [-0.51 0.43]
- 79.       }
- 80.     }
- 81.   ],
- 82.   "data": [
- 83.     {
- 84.       "id": "kin",
- 85.       "doi": "10.17605/OSF.IO/F7QWS",
- 86.       "url": "https://osf.io/ewfhs/",
- 87.       "codebook": [
- 88.         {
- 89.           "name": "trust_self",
- 90.           "description": "Number of trusting moves towards self-morphs"
- 91.         },
- 92.         {
- 93.           "name": "trust_other",
- 94.           "description": "Number of trusting moves towards self-morphs"
- 95.         },
- 96.         {
- 97.           "name": "recip_self",
- 98.           "description": "Number of reciprocating moves towards other-morphs"
- 99.         },
-100.         {
-101.           "name": "recip_other",
-102.           "description": "Number of reciprocating moves towards other-morphs"
-103.         }
-104.       ],
-105.       "values": {
-106.         "trust_self": [1,2,2,1,1,1,1,1,2,0,2,0,1,2,2,3,2,2,1,1,2,0,0,1],
-107.         "trust_other": [1,2,2,0,1,0,0,0,1,0,1,0,1,1,1,0,1,2,2,0,0,0,2,1],
-108.         "recip_self": [0,1,3,2,1,1,1,3,3,2,3,1,1,2,3,3,3,1,1,1,3,0,3,1],
-109.         "recip_other": [1,1,2,2,3,2,1,3,3,1,3,0,1,3,3,3,3,0,3,0,1,0,3,2]
-110.       }
-111.     }
-112.   ]
-113. }
-\end{verbatim}
 
-The statistical prediction can be evaluated automatically, without human intervention, as long as the prediction is specified in a machine readable format. Based on the information specified in the analyses and criteria sections of the meta-data, a computer script can read in the analytic data, perform each analysis specified in the JSON file, and store the results. For example, the \enquote{trust\_analysis} can be performed by running the analysis \texttt{t.test(x\ =\ kin\textbackslash{}\$trust\_self,\ y\ =\ kin\$trust\_other,\ paired\ =\ TRUE,\ conf.level\ =\ .975)} after the data is loaded as an object named \enquote{kin}. We store the result of this analysis (e.g., the t.test function in R returns a list of named numbers, including \enquote{conf.int}: {[}0.02, 0.98{]} in line 63). Based on the results of the analyses, the code can compare the results against the criteria. For example, because the first number in the \enquote{conf.int} result (0.02) is larger (\enquote{\textgreater{}}) than zero (\enquote{0}), we can store the conclusion that this criterion is \enquote{true} (line 13). After the code has drawn conclusions about whether each criterion is met or not, based on the results of the analyses, the evaluation rules can be used to determine whether the prediction is corroborated, falsified, or neither (and thus the results are inconclusive). For the prediction to be corroborated, the criteria for trust\_lowbound and trust\_highbound have to be met, and/or the criteria for recip\_lowbound and recip\_highbound have to be met. Since the conclusions for trust\_lowbound and trust\_highbound are both true, the prediction is corroborated, and because it is not true that both upper bounds for the confidence interval are smaller than 0.2, the prediction is not falsified. The overall conclusion is therefore that our statistical prediction is corroborated
+
+```
+{
+    "name": "Kinship and Prosocial Behaviour",
+    "info": [],
+    "authors": [],
+    "hypotheses": [ ...Box 2... ],
+    "methods": [],
+    "data": [ ...Box 6... ],
+    "analyses": [ ...Box 5... ]
+}
+```
+
+\end{verbatim}
+\end{tcolorbox}
+
+A study could contain multiple hypotheses, but our example contains only one. Each \texttt{hypothesis} (Box 2) consists of an \texttt{id} for referencing the hopthesis in other components, a verbal human-readable \texttt{description}, one or more \texttt{criteria} to evaluate analysis results, and rules to determine \texttt{corroboration} or \texttt{falsification} of the hypothesis. If the data are available, these rules are automatically evaluated and a \texttt{conclusion} of \enquote{corroborate}, \enquote{falsify}, or \enquote{inconclusive} is added.
+
+\begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 2. The hypothesis component.]
+\begin{verbatim}
+
+```
+    "hypotheses": [
+        {
+            "id": "self_pref",
+            "description": "Cues of kinship will increase prosocial
+              behaviour. Cues of kinship will be manipulated by
+              morphed facial self-resemblance. Prosocial behaviour
+              will be measured by responses in the trust game.
+              The prediction is that the number of trusting AND/OR
+              reciprocating moves will be greater to self morphs than
+              to other morphs.",
+            "criteria": [ ...Box3... ],
+            "corroboration": { ...Box 4... },
+            "falsification": { ...Box 4... },
+            "conclusion": "corroborate"
+        }
+    ]
+```
+
+\end{verbatim}
+\end{tcolorbox}
+
+Each criterion (Box 3) needs an \texttt{id} to be able to reference them in the evaluations and references a named \texttt{result} from an analysis with the id \texttt{analysis\_id}. An \texttt{operator} and a \texttt{comparator} are provided for each criterion to specify the method of comparison (e.g., \textgreater{}, \textless{}, =, !=) and the comparison value (e.g., 0). For example, the first criterion specifies that if the statistical result \enquote{conf.int{[}1{]}} from \enquote{trust\_analysis} is \enquote{\textgreater{}} than \enquote{0}, then the criterion \enquote{trust\_lowbound} evaluates to a \texttt{conclusion} of \enquote{true}. In other words, if we can statistically reject the null hypothesis (because the lower bound of the confidence interval does not overlap with 0), this criterion of our statistical prediction is corroborated.
+
+\begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 3. Criteria for evaluation.]
+\begin{verbatim}
+
+```
+            "criteria": [
+                {
+                    "id": "trust_lowbound",
+                    "analysis_id": "trust_analysis",
+                    "result": "conf.int[1]",
+                    "operator": ">",
+                    "comparator": 0,
+                    "conclusion": true
+                },
+                {
+                    "id": "trust_highbound",
+                    "analysis_id": "trust_analysis",
+                    "result": "conf.int[2]",
+                    "operator": ">",
+                    "comparator": 0.2,
+                    "conclusion": true
+                },
+                {
+                    "id": "recip_lowbound",
+                    "analysis_id": "recip_analysis",
+                    "result": "conf.int[1]",
+                    "operator": ">",
+                    "comparator": 0,
+                    "conclusion": false
+                },
+                {
+                    "id": "recip_highbound",
+                    "analysis_id": "recip_analysis",
+                    "result": "conf.int[2]",
+                    "operator": ">",
+                    "comparator": 0.2,
+                    "conclusion": true
+                }
+            ]
+```
+
+\end{verbatim}
+\end{tcolorbox}
+
+The \texttt{corroboration} and \texttt{falsification} sub-components (Box 4.) describe rules to determine corroboration or falsification of a hypothesis from the criteria conclusions, and each consists of three elements. The \texttt{description} element contains verbal descriptions of the decision rules for concluding the hypothesis is corroborated or falsified. The \texttt{evaluation} element contains a logical version referencing the criteria IDs. For example, \enquote{\texttt{(trust\_lowbound\ \&\ trust\_highbound)\ \textbar{}\ (recip\_lowbound\ \&\ recip\_highbound)}} means that the corroboration \texttt{result} will be set to \enquote{true} if the first two criteria are both true, or if the last two criteria are both true, while \enquote{\texttt{!trust\_highbound\ \&\ !recip\_highbound}} means that the falsify conclusion will be set to \enquote{true} if both of these criteria are false.
+
+\begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 4. Corroboration and falsification rules.]
+\begin{verbatim}
+
+```
+            "corroboration": {
+                "description": "The hypothesis is corroborated if the
+              97.5% CI lower bound is greater than 0 and the 97.5% CI
+              upper bound is greater than 0.2 (the SESOI) for either
+              the trust or reciprocation moves.",
+                "evaluation": "(trust_lowbound & trust_highbound) |
+              (recip_lowbound & recip_highbound)",
+                "result": true
+            },
+            "falsification": {
+                "description": "The hypothesis is falsified if the
+              97.5% CI upper bound is smaller than 0.2 (the SESOI)
+              for both trust and reciprocation.",
+                "evaluation": "!trust_highbound & !recip_highbound",
+                "result": false
+            }
+```
+
+\end{verbatim}
+\end{tcolorbox}
+
+Each analysis is specified in the \texttt{analysis} component (Box 5). An analysis consists of an \texttt{id} to reference the statistical test when evaluating the criteria and the \texttt{code} used to run the analysis. Once data are attached and the analyses are run, a list of named \texttt{results} is added to be referenced in the criteria. Each analysis can also contain additional information, such as the software used to perform the analysis. The example below specifies two \emph{t}-tests, using the \texttt{t.test} function in R. In scienceverse, short analyses can be added manually, or longer ones references to an external file.
+
+\begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 5. The analysis component.]
+\begin{verbatim}
+
+```
+    "analyses": [
+        {
+            "id": "trust_analysis",
+            "func": "analysis_trust_analysis_func",
+            "code": [
+                "function () ",
+                "{",
+                " t.test(kin$trust_self, kin$trust_other, paired =
+              TRUE, conf.level = 0.975)",
+                "}"
+            ],
+            "software": "R version 3.6.2 (2019-12-12)",
+            "results": { ...Box 7... }
+        },
+        {
+            "id": "recip_analysis",
+            "func": "analysis_recip_analysis_func",
+            "code": [
+                "function () ",
+                "{",
+                " t.test(kin$recip_self, kin$recip_other, paired =
+              TRUE, conf.level = 0.975)",
+                "}"
+            ],
+            "software": "R version 3.6.2 (2019-12-12)",
+            "results": { ...Box 7... }
+        }
+    ]
+```
+
+\end{verbatim}
+\end{tcolorbox}
+
+Each dataset can be specified in the \texttt{data} component (Box 6). A dataset consists of an \texttt{id} to reference the dataset in analyses and information about how to obtain the data (e.g., \texttt{doi}, \texttt{url}). The \texttt{codebook} contains descriptions of each column, and it is even possible to include the analytic data \texttt{values} in this component. Below, we present a simple version of a codebook, but the descriptors for each column can be arbitrarily detailed and automatically extracted from existing data structures, such as SPSS files. For software that helps researchers to share machine-readable codebooks, see Arslan (2019).
+
+\begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 6. The data component.]
+\begin{verbatim}
+
+```
+    "data": [
+        {
+            "id": "kin",
+            "@type": "Dataset",
+            "schemaVersion": "Psych-DS 0.1.0",
+            "variableMeasured": [
+                {
+                    "type": "PropertyValue",
+                    "unitText": "trust_self",
+                    "name": "Number of trusting moves towards self-morphs",
+                    "missingValues": 0,
+                    "minValue": 0,
+                    "maxValue": 3,
+                    "meanValue": 1.2917,
+                    "sdValue": 0.8065
+                },
+                { ...more variable descriptions... },
+                {
+                    "type": "PropertyValue",
+                    "unitText": "recip_other",
+                    "name": "Number of reciprocating moves towards other-
+              morphs",
+                    "missingValues": 0,
+                    "minValue": 0,
+                    "maxValue": 3,
+                    "meanValue": 1.8333,
+                    "sdValue": 1.1672
+                }
+            ]
+        }
+    ]
+```
+
+\end{verbatim}
+\end{tcolorbox}
+
+Now that the prediction is specified in a machine readable format, it is possible for the statistical prediction to be evaluated automatically (although results can be added manually where code to automatically evaluate specific analyses is not yet available). Based on the information specified in the analyses, criteria, and data components, the \texttt{study\_analyze} function in scienceverse can read in the analytic data, perform each analysis, and store the results. For example, the \enquote{trust\_analysis} can be performed by running the analysis \texttt{t.test(x\ =\ kin\textbackslash{}\$trust\_self,\ y\ =\ kin\$trust\_other,\ paired\ =\ TRUE,\ conf.level\ =\ .975)} after the data is loaded as an object named \enquote{kin}. We store the result of this analysis (e.g., the t.test function in R returns a list of named numbers, including \enquote{conf.int}: {[}0.0213, 0.9787{]}). The criteria are then evaluated against the results of the analyses. For example, because the first number in the \enquote{conf.int} result (0.0213) is larger (\enquote{\textgreater{}}) than zero (\enquote{0}), we can store the conclusion that this criterion is \enquote{true} (see Box 3). After the code has drawn conclusions about whether each criterion is met or not, based on the results of the analyses, the evaluation rules can be used to determine whether the prediction is corroborated, falsified, or neither (and thus the results are inconclusive). For the prediction to be corroborated, the criteria for \enquote{trust\_lowbound} and \enquote{trust\_highbound} have to be met, and/or the criteria for \enquote{recip\_lowbound} and \enquote{recip\_highbound} have to be met. Since the conclusions for \enquote{trust\_lowbound} and \enquote{trust\_highbound} are both true, the prediction is corroborated, and because it is not true that both upper bounds for the confidence interval are smaller than 0.2, the prediction is not falsified. The overall \texttt{conclusion} (Box 3) is therefore that our statistical prediction is corroborated.
+
+\begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 7. Results of data analysis.]
+\begin{verbatim}
+
+```
+    "analyses": [
+        {
+            "id": "trust_analysis",
+            ...
+            "results": {
+                "statistic": 2.5045,
+                "parameter": 23,
+                "p.value": 0.0198,
+                "conf.int": [0.0213, 0.9787],
+                "estimate": 0.5,
+                "null.value": 0,
+                "stderr": 0.1996,
+                "alternative": "two.sided",
+                "method": "Paired t-test",
+                "data.name": "kin$trust_self and kin$trust_other"
+            }
+        },
+        {
+            "id": "recip_analysis",
+            ...
+            "results": {
+                "statistic": -0.2138,
+                "parameter": 23,
+                "p.value": 0.8326,
+                "conf.int": [-0.5089, 0.4256],
+                "estimate": -0.0417,
+                "null.value": 0,
+                "stderr": 0.1949,
+                "alternative": "two.sided",
+                "method": "Paired t-test",
+                "data.name": "kin$recip_self and kin$recip_other"
+            }
+        }
+    ]
+}
+```
+
+\end{verbatim}
+\end{tcolorbox}
 
 \hypertarget{benefits-of-machine-readability}{%
 \subsection{Benefits of Machine Readability}\label{benefits-of-machine-readability}}
 
-We believe the benefits of making statistical predictions machine readable are worth the effort. First, machine-readable hypotheses completely remove ambiguity about what researchers predict and which criteria must be met to conclude a statistical prediction hypothesis is corroborated. Although ambiguity can be removed in other ways, the formalized approach as illustrated in Box 1 is perfectly suited for this goal. Predictions are explicitly linked to the tests that are performed to evalaute if the prediction is corroborated or not. The exact test is specified, which prevents flexibility in the data analysis. This method prevents researchers who will replicate the study from having to infer the criteria for corroboration or falsification from the observed pattern of results and the conclusion. If a researchers feels the statistical prediction can be tested in different ways, each equally reasonable, a range of sensitivity analyses across which the prediction should hold can be specified.
+We believe the benefits of making statistical predictions machine readable are worth the effort. First, machine-readable hypotheses completely remove ambiguity about what researchers predict and which criteria must be met to conclude a statistical prediction hypothesis is corroborated. Although ambiguity can be removed in other ways, the formalized approach as illustrated above is perfectly suited for this goal. Predictions are explicitly linked to the tests that are performed to evalaute if the prediction is corroborated or not. The exact test is specified, which prevents flexibility in the data analysis. This method prevents researchers who will replicate the study from having to infer the criteria for corroboration or falsification from the observed pattern of results and the conclusion. If a researchers feels the statistical prediction can be tested in different ways, each equally reasonable, a range of sensitivity analyses across which the prediction should hold can be specified.
 
 While this method obviously cannot ensure that the logic behind predictions or criteria for corroboration or falsification are correct, the process of writing a machine-readable statistical prediction has a secondary benefit of providing a framework for thinking through the logic of a prediction. If one finds it impossible to specify the ranges of results that will corroborate or falsify a prediction, it is likely that the hypothesis is not yet well-specified enough for confirmatory hypothesis testing. Hypothesis tests are an extremely formalized procedure to test predictions. Making this clear might make researchers realize they are not yet ready to test a hypothesis, and remind them of the importance and value of exploratory research.
 
