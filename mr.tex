@@ -165,13 +165,13 @@ If a prediction is machine readable, it is possible to automatically determine i
 
 We provide an \href{example/example.Rmd}{R script} with a concrete example of a machine-readable statistical prediction for the study by DeBruine (2002) described above. It is written using the R package \href{https://scienceverse.github.io/scienceverse/}{\textbf{scienceverse}} and produces a \href{example/postreg.json}{JSON file}, which is an open-standard file format that can be used to transmit data. Because it is an open-standard file format, it can easily be converted into any other data file format such as YAML or JATS, which in essence are all nested lists. It can also be converted to a \href{example/postreg.html}{human-readable report}, summarising the study with verbal descriptions and a list containing the conclusion for each statistical prediction.
 
+\hypertarget{setting-up-a-study}{%
+\subsubsection{Setting up a study}\label{setting-up-a-study}}
+
 The top level list (Box 1) contains components describing different aspects of the study, such as authors, hypotheses, materials, methods, data, and analyses. In the future we might be able to describe all information in a scientific article that we would like to be able to retrieve, but here we will focus on the aspects of the study that are required to make statistical predictions machine readable. To achieve this, we need a meta-data file that specifies the hypotheses, the analyses, and the evaluation criteria for each prediction.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 1. The top-level structure of the machine-readable study description.]
 \begin{verbatim}
-
-
-```
 {
     "name": "Kinship and Prosocial Behaviour",
     "info": [],
@@ -181,44 +181,44 @@ The top level list (Box 1) contains components describing different aspects of t
     "data": [ ...Box 6... ],
     "analyses": [ ...Box 5... ]
 }
-```
-
 \end{verbatim}
 \end{tcolorbox}
+
+\hypertarget{hypotheses}{%
+\subsubsection{Hypotheses}\label{hypotheses}}
 
 A study could contain multiple hypotheses, but our example contains only one. Each \texttt{hypothesis} (Box 2) consists of an \texttt{id} for referencing the hopthesis in other components, a verbal human-readable \texttt{description}, one or more \texttt{criteria} to evaluate analysis results, and rules to determine \texttt{corroboration} or \texttt{falsification} of the hypothesis. If the data are available, these rules are automatically evaluated and a \texttt{conclusion} of \enquote{corroborate}, \enquote{falsify}, or \enquote{inconclusive} is added.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 2. The hypothesis component.]
 \begin{verbatim}
-
-```
     "hypotheses": [
         {
             "id": "self_pref",
             "description": "Cues of kinship will increase prosocial
-              behaviour. Cues of kinship will be manipulated by
-              morphed facial self-resemblance. Prosocial behaviour
-              will be measured by responses in the trust game.
-              The prediction is that the number of trusting AND/OR
-              reciprocating moves will be greater to self morphs than
-              to other morphs.",
+                            behaviour. Cues of kinship will be
+                            manipulated by morphed facial self-
+                            resemblance. Prosocial behaviour will be
+                            measured by responses in the trust game.
+                            The prediction is that the number of
+                            trusting AND/OR reciprocating moves will 
+                            be greater to self morphs than to other
+                            morphs.",
             "criteria": [ ...Box3... ],
             "corroboration": { ...Box 4... },
             "falsification": { ...Box 4... },
             "conclusion": "corroborate"
         }
     ]
-```
-
 \end{verbatim}
 \end{tcolorbox}
+
+\hypertarget{criteria}{%
+\subsubsection{Criteria}\label{criteria}}
 
 Each criterion (Box 3) needs an \texttt{id} to be able to reference them in the evaluations and references a named \texttt{result} from an analysis with the id \texttt{analysis\_id}. An \texttt{operator} and a \texttt{comparator} are provided for each criterion to specify the method of comparison (e.g., \textgreater{}, \textless{}, =, !=) and the comparison value (e.g., 0). For example, the first criterion specifies that if the statistical result \enquote{conf.int{[}1{]}} from \enquote{trust\_analysis} is \enquote{\textgreater{}} than \enquote{0}, then the criterion \enquote{trust\_lowbound} evaluates to a \texttt{conclusion} of \enquote{true}. In other words, if we can statistically reject the null hypothesis (because the lower bound of the confidence interval does not overlap with 0), this criterion of our statistical prediction is corroborated.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 3. Criteria for evaluation.]
 \begin{verbatim}
-
-```
             "criteria": [
                 {
                     "id": "trust_lowbound",
@@ -253,128 +253,147 @@ Each criterion (Box 3) needs an \texttt{id} to be able to reference them in the 
                     "conclusion": true
                 }
             ]
-```
-
 \end{verbatim}
 \end{tcolorbox}
+
+\hypertarget{hypothesis-evaluation}{%
+\subsubsection{Hypothesis Evaluation}\label{hypothesis-evaluation}}
 
 The \texttt{corroboration} and \texttt{falsification} sub-components (Box 4.) describe rules to determine corroboration or falsification of a hypothesis from the criteria conclusions, and each consists of three elements. The \texttt{description} element contains verbal descriptions of the decision rules for concluding the hypothesis is corroborated or falsified. The \texttt{evaluation} element contains a logical version referencing the criteria IDs. For example, \enquote{\texttt{(trust\_lowbound\ \&\ trust\_highbound)\ \textbar{}\ (recip\_lowbound\ \&\ recip\_highbound)}} means that the corroboration \texttt{result} will be set to \enquote{true} if the first two criteria are both true, or if the last two criteria are both true, while \enquote{\texttt{!trust\_highbound\ \&\ !recip\_highbound}} means that the falsify conclusion will be set to \enquote{true} if both of these criteria are false.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 4. Corroboration and falsification rules.]
 \begin{verbatim}
-
-```
             "corroboration": {
                 "description": "The hypothesis is corroborated if the
-              97.5% CI lower bound is greater than 0 and the 97.5% CI
-              upper bound is greater than 0.2 (the SESOI) for either
-              the trust or reciprocation moves.",
+                                97.5% CI lower bound is greater than 0
+                                and the 97.5% CI upper bound is greater
+                                than 0.2 (the SESOI) for either the
+                                trust or reciprocation moves.",
                 "evaluation": "(trust_lowbound & trust_highbound) |
-              (recip_lowbound & recip_highbound)",
+                               (recip_lowbound & recip_highbound)",
                 "result": true
             },
             "falsification": {
                 "description": "The hypothesis is falsified if the
-              97.5% CI upper bound is smaller than 0.2 (the SESOI)
-              for both trust and reciprocation.",
+                                97.5% CI upper bound is smaller than
+                                0.2 (the SESOI) for both trust and
+                                reciprocation.",
                 "evaluation": "!trust_highbound & !recip_highbound",
                 "result": false
             }
-```
-
 \end{verbatim}
 \end{tcolorbox}
+
+\hypertarget{analyses}{%
+\subsubsection{Analyses}\label{analyses}}
 
 Each analysis is specified in the \texttt{analysis} component (Box 5). An analysis consists of an \texttt{id} to reference the statistical test when evaluating the criteria and the \texttt{code} used to run the analysis. Once data are attached and the analyses are run, a list of named \texttt{results} is added to be referenced in the criteria. Each analysis can also contain additional information, such as the software used to perform the analysis. The example below specifies two \emph{t}-tests, using the \texttt{t.test} function in R. In scienceverse, short analyses can be added manually, or longer ones references to an external file.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 5. The analysis component.]
 \begin{verbatim}
-
-```
     "analyses": [
         {
-            "id": "trust_analysis",
-            "func": "analysis_trust_analysis_func",
+            "id": "trust",
+            "func": "analysis_trust_func",
             "code": [
                 "function () ",
                 "{",
-                " t.test(kin$trust_self, kin$trust_other, paired =
-              TRUE, conf.level = 0.975)",
+                "    t.test(kin$trust_self, kin$trust_other, 
+                            paired = TRUE, conf.level = 0.975)",
                 "}"
             ],
             "software": "R version 3.6.2 (2019-12-12)",
             "results": { ...Box 7... }
         },
         {
-            "id": "recip_analysis",
-            "func": "analysis_recip_analysis_func",
+            "id": "recip",
+            "func": "analysis_recip_func",
             "code": [
                 "function () ",
                 "{",
-                " t.test(kin$recip_self, kin$recip_other, paired =
-              TRUE, conf.level = 0.975)",
+                "    t.test(kin$recip_self, kin$recip_other, 
+                            paired = TRUE, conf.level = 0.975)",
                 "}"
             ],
             "software": "R version 3.6.2 (2019-12-12)",
             "results": { ...Box 7... }
         }
     ]
-```
-
 \end{verbatim}
 \end{tcolorbox}
 
-Each dataset can be specified in the \texttt{data} component (Box 6). A dataset consists of an \texttt{id} to reference the dataset in analyses and information about how to obtain the data (e.g., \texttt{doi}, \texttt{url}). The \texttt{codebook} contains descriptions of each column, and it is even possible to include the analytic data \texttt{values} in this component. Below, we present a simple version of a codebook, but the descriptors for each column can be arbitrarily detailed and automatically extracted from existing data structures, such as SPSS files. For software that helps researchers to share machine-readable codebooks, see Arslan (2019).
+\hypertarget{data}{%
+\subsubsection{Data}\label{data}}
+
+Each dataset can be specified in the \texttt{data} component (Box 6). A dataset consists of an \texttt{id} to reference the dataset in analyses and information about how to obtain the data (e.g., \texttt{doi}, \texttt{url}). The \texttt{codebook} contains descriptions of each column, and it is even possible to include the analytic data \texttt{values} in this component. Below, we present a codebook created by scienceverse using the \href{https://docs.google.com/document/d/1u8o5jnWk0Iqp_J06PTu5NjBfVsdoPbBhstht6W0fFp0/edit\#heading=h.caxnnxqaobj}{Psych-DS 0.1.0 format}, but the descriptors for each column can be arbitrarily detailed and automatically extracted from existing data structures, such as SPSS files. For other software that helps researchers to create and share machine-readable codebooks, see Arslan (2019).
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 6. The data component.]
 \begin{verbatim}
-
-```
     "data": [
         {
             "id": "kin",
-            "@type": "Dataset",
-            "schemaVersion": "Psych-DS 0.1.0",
-            "variableMeasured": [
-                {
-                    "type": "PropertyValue",
-                    "unitText": "trust_self",
-                    "name": "Number of trusting moves towards self-morphs",
-                    "missingValues": 0,
-                    "minValue": 0,
-                    "maxValue": 3,
-                    "meanValue": 1.2917,
-                    "sdValue": 0.8065
-                },
-                { ...more variable descriptions... },
-                {
-                    "type": "PropertyValue",
-                    "unitText": "recip_other",
-                    "name": "Number of reciprocating moves towards other-
-              morphs",
-                    "missingValues": 0,
-                    "minValue": 0,
-                    "maxValue": 3,
-                    "meanValue": 1.8333,
-                    "sdValue": 1.1672
-                }
-            ]
+            "codebook": {
+                "@context": "https://schema.org/",
+                "@type": "Dataset",
+                "name": "kin",
+                "schemaVersion": "Psych-DS 0.1.0",
+                "url": "https://osf.io/ewfhs/",
+                "variableMeasured": [
+                    {
+                        "@type": "PropertyValue",
+                        "name": "trust_self",
+                        "description": "Number of trusting moves
+                                        towards self-morphs",
+                        "type": "int"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "name": "trust_other",
+                        "description": "Number of trusting moves
+                                        towards self-morphs",
+                        "type": "int"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "name": "recip_self",
+                        "description": "Number of reciprocating moves 
+                                        towards other-morphs",
+                        "type": "int"
+                    },
+                    {
+                        "@type": "PropertyValue",
+                        "name": "recip_other",
+                        "description": "Number of reciprocating moves
+                                        towards other-morphs",
+                        "type": "int"
+                    }
+                ]
+            },
+            "data": {
+                "trust_self": [1, 2, 2, 1, 1, 1, 1, 1, 2, 0, 2, 0, 
+                               1, 2, 2, 3, 2, 2, 1, 1, 2, 0, 0, 1],
+                "trust_other": [1, 2, 2, 0, 1, 0, 0, 0, 1, 0, 1, 0,
+                                1, 1, 1, 0, 1, 2, 2, 0, 0, 0, 2, 1],
+                "recip_self": [0, 1, 3, 2, 1, 1, 1, 3, 3, 2, 3, 1,
+                               1, 2, 3, 3, 3, 1, 1, 1, 3, 0, 3, 1],
+                "recip_other": [1, 1, 2, 2, 3, 2, 1, 3, 3, 1, 3, 0,
+                                1, 3, 3, 3, 3, 0, 3, 0, 1, 0, 3, 2]
+            }
         }
     ]
-```
-
 \end{verbatim}
 \end{tcolorbox}
+
+\hypertarget{automatic-evaluation}{%
+\subsubsection{Automatic Evaluation}\label{automatic-evaluation}}
 
 Now that the prediction is specified in a machine readable format, it is possible for the statistical prediction to be evaluated automatically (although results can be added manually where code to automatically evaluate specific analyses is not yet available). Based on the information specified in the analyses, criteria, and data components, the \texttt{study\_analyze} function in scienceverse can read in the analytic data, perform each analysis, and store the results. For example, the \enquote{trust\_analysis} can be performed by running the analysis \texttt{t.test(x\ =\ kin\textbackslash{}\$trust\_self,\ y\ =\ kin\$trust\_other,\ paired\ =\ TRUE,\ conf.level\ =\ .975)} after the data is loaded as an object named \enquote{kin}. We store the result of this analysis (e.g., the t.test function in R returns a list of named numbers, including \enquote{conf.int}: {[}0.0213, 0.9787{]}). The criteria are then evaluated against the results of the analyses. For example, because the first number in the \enquote{conf.int} result (0.0213) is larger (\enquote{\textgreater{}}) than zero (\enquote{0}), we can store the conclusion that this criterion is \enquote{true} (see Box 3). After the code has drawn conclusions about whether each criterion is met or not, based on the results of the analyses, the evaluation rules can be used to determine whether the prediction is corroborated, falsified, or neither (and thus the results are inconclusive). For the prediction to be corroborated, the criteria for \enquote{trust\_lowbound} and \enquote{trust\_highbound} have to be met, and/or the criteria for \enquote{recip\_lowbound} and \enquote{recip\_highbound} have to be met. Since the conclusions for \enquote{trust\_lowbound} and \enquote{trust\_highbound} are both true, the prediction is corroborated, and because it is not true that both upper bounds for the confidence interval are smaller than 0.2, the prediction is not falsified. The overall \texttt{conclusion} (Box 3) is therefore that our statistical prediction is corroborated.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 7. Results of data analysis.]
 \begin{verbatim}
-
-```
     "analyses": [
         {
-            "id": "trust_analysis",
+            "id": "trust",
             ...
             "results": {
                 "statistic": 2.5045,
@@ -390,7 +409,7 @@ Now that the prediction is specified in a machine readable format, it is possibl
             }
         },
         {
-            "id": "recip_analysis",
+            "id": "recip",
             ...
             "results": {
                 "statistic": -0.2138,
@@ -406,9 +425,6 @@ Now that the prediction is specified in a machine readable format, it is possibl
             }
         }
     ]
-}
-```
-
 \end{verbatim}
 \end{tcolorbox}
 
