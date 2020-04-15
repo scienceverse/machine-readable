@@ -19,9 +19,9 @@ affiliation:
 authornote: |
   Both authors contributed equally to the manuscript. First authorship was determined based on a Great League trainer battle between the authors in Pokemon Go.
   
-  Lisa DeBruine  https://orcid.org/0000-0002-7523-5539. 
+  Lisa DeBruine  https://orcid.org/0000-0002-7523-5539 
   
-  Daniël Lakens  https://orcid.org/0000-0002-0247-239X.
+  Daniël Lakens  https://orcid.org/0000-0002-0247-239X
   
 abstract: |
   Making scientific information machine-readable greatly facilitates its re-use. Many scientific articles have the goal to test a hypothesis, and making the tests of statistical predictions easier to find and access could be very beneficial. We propose an approach that can be used to make hypothesis tests machine readable. We believe there are two benefits to specifying a hypothesis test in a way that a computer can evaluate whether the statistical prediction is corroborated or not. First, hypothesis test will become more transparent, falsifiable, and rigorous. Second, scientists will benefit if information related to hypothesis tests in scientific articles is easily findable and re-usable, for example when performing meta-analyses, during peer review, and when examining meta-scientific research questions. We examine what a machine readable hypothesis test should looks like, and demonstrate the feasibility of machine readable hypothesis tests in a real-life example. 
@@ -277,7 +277,7 @@ Each analysis is specified in the `analysis` component (Box 5). An analysis cons
 
 ### Data
 
-Each dataset can be specified in the `data` component (Box 6). A dataset consists of an `id` to reference the dataset in analyses and information about how to obtain the data (e.g., `doi`, `url`). The `codebook` contains descriptions of each column, and it is even possible to include the analytic data `values` in this component. Below, we present a codebook created by scienceverse using the [Psych-DS 0.1.0 format](https://docs.google.com/document/d/1u8o5jnWk0Iqp_J06PTu5NjBfVsdoPbBhstht6W0fFp0/edit#heading=h.caxnnxqaobj), but the descriptors for each column can be arbitrarily detailed and automatically extracted from existing data structures, such as SPSS files. For other software that helps researchers to create and share machine-readable codebooks, see @arslan2019.
+Each dataset can be specified in the `data` component (Box 6). A dataset consists of an `id` to reference the dataset in analyses and information about how to obtain the data (e.g., `doi`, `url`). The `codebook` contains descriptions of each column, and it is even possible to include the analytic `data` values in this component. Below, we present a data component with a codebook created by scienceverse using the [Psych-DS 0.1.0 format](https://docs.google.com/document/d/1u8o5jnWk0Iqp_J06PTu5NjBfVsdoPbBhstht6W0fFp0/edit#heading=h.caxnnxqaobj), but the descriptors for each column can be arbitrarily detailed or follow other published formats. This, they can be automatically extracted from existing data structures, such as SPSS files. For other software that helps researchers to create and share machine-readable codebooks, see @arslan2019.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 6. The data component.]
 \begin{verbatim}
@@ -291,29 +291,25 @@ Each dataset can be specified in the `data` component (Box 6). A dataset consist
                 "schemaVersion": "Psych-DS 0.1.0",
                 "url": "https://osf.io/ewfhs/",
                 "variableMeasured": [
-                    {
-                        "@type": "PropertyValue",
+                    {   "@type": "PropertyValue",
                         "name": "trust_self",
                         "description": "Number of trusting moves
                                         towards self-morphs",
                         "type": "int"
                     },
-                    {
-                        "@type": "PropertyValue",
+                    {   "@type": "PropertyValue",
                         "name": "trust_other",
                         "description": "Number of trusting moves
                                         towards self-morphs",
                         "type": "int"
                     },
-                    {
-                        "@type": "PropertyValue",
+                    {   "@type": "PropertyValue",
                         "name": "recip_self",
                         "description": "Number of reciprocating moves 
                                         towards other-morphs",
                         "type": "int"
                     },
-                    {
-                        "@type": "PropertyValue",
+                    {   "@type": "PropertyValue",
                         "name": "recip_other",
                         "description": "Number of reciprocating moves
                                         towards other-morphs",

@@ -97,9 +97,9 @@
 \textsuperscript{1} School of Innovation Sciences, Eindhoven University of Technology\\\textsuperscript{2} Institute of Neuroscience and Psychology, University of Glasgow}
 \authornote{Both authors contributed equally to the manuscript. First authorship was determined based on a Great League trainer battle between the authors in Pokemon Go.
 
-Lisa DeBruine  https://orcid.org/0000-0002-7523-5539. 
+Lisa DeBruine  https://orcid.org/0000-0002-7523-5539 
 
-Daniël Lakens  https://orcid.org/0000-0002-0247-239X.
+Daniël Lakens  https://orcid.org/0000-0002-0247-239X
 
 
 Correspondence concerning this article should be addressed to Daniël Lakens, ATLAS 9.402, 5600 MB, Eindhoven, The Netherlands. E-mail: D.Lakens@tue.nl}
@@ -325,7 +325,7 @@ Each analysis is specified in the \texttt{analysis} component (Box 5). An analys
 \hypertarget{data}{%
 \subsubsection{Data}\label{data}}
 
-Each dataset can be specified in the \texttt{data} component (Box 6). A dataset consists of an \texttt{id} to reference the dataset in analyses and information about how to obtain the data (e.g., \texttt{doi}, \texttt{url}). The \texttt{codebook} contains descriptions of each column, and it is even possible to include the analytic data \texttt{values} in this component. Below, we present a codebook created by scienceverse using the \href{https://docs.google.com/document/d/1u8o5jnWk0Iqp_J06PTu5NjBfVsdoPbBhstht6W0fFp0/edit\#heading=h.caxnnxqaobj}{Psych-DS 0.1.0 format}, but the descriptors for each column can be arbitrarily detailed and automatically extracted from existing data structures, such as SPSS files. For other software that helps researchers to create and share machine-readable codebooks, see Arslan (2019).
+Each dataset can be specified in the \texttt{data} component (Box 6). A dataset consists of an \texttt{id} to reference the dataset in analyses and information about how to obtain the data (e.g., \texttt{doi}, \texttt{url}). The \texttt{codebook} contains descriptions of each column, and it is even possible to include the analytic \texttt{data} values in this component. Below, we present a data component with a codebook created by scienceverse using the \href{https://docs.google.com/document/d/1u8o5jnWk0Iqp_J06PTu5NjBfVsdoPbBhstht6W0fFp0/edit\#heading=h.caxnnxqaobj}{Psych-DS 0.1.0 format}, but the descriptors for each column can be arbitrarily detailed or follow other published formats. This, they can be automatically extracted from existing data structures, such as SPSS files. For other software that helps researchers to create and share machine-readable codebooks, see Arslan (2019).
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 6. The data component.]
 \begin{verbatim}
@@ -339,29 +339,25 @@ Each dataset can be specified in the \texttt{data} component (Box 6). A dataset 
                 "schemaVersion": "Psych-DS 0.1.0",
                 "url": "https://osf.io/ewfhs/",
                 "variableMeasured": [
-                    {
-                        "@type": "PropertyValue",
+                    {   "@type": "PropertyValue",
                         "name": "trust_self",
                         "description": "Number of trusting moves
                                         towards self-morphs",
                         "type": "int"
                     },
-                    {
-                        "@type": "PropertyValue",
+                    {   "@type": "PropertyValue",
                         "name": "trust_other",
                         "description": "Number of trusting moves
                                         towards self-morphs",
                         "type": "int"
                     },
-                    {
-                        "@type": "PropertyValue",
+                    {   "@type": "PropertyValue",
                         "name": "recip_self",
                         "description": "Number of reciprocating moves 
                                         towards other-morphs",
                         "type": "int"
                     },
-                    {
-                        "@type": "PropertyValue",
+                    {   "@type": "PropertyValue",
                         "name": "recip_other",
                         "description": "Number of reciprocating moves
                                         towards other-morphs",
