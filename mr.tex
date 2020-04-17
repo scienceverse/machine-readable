@@ -1,39 +1,47 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 %
-\documentclass[english,doc,floatsintext]{apa6}
+\documentclass[
+  doc,floatsintext]{apa6}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
-\usepackage{hyperref}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-            pdftitle={Improving Transparency, Falsifiability, and Rigour by Making Hypothesis Tests Machine Readable},
-            pdfkeywords={hypothesis testing, machine readability, metadata, scholarly communication},
-            pdfborder={0 0 0},
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
+  pdftitle={Improving Transparency, Falsifiability, and Rigour by Making Hypothesis Tests Machine Readable},
+  pdfauthor={Daniël Lakens~\& Lisa M. DeBruine},
+  pdfkeywords={hypothesis testing, machine readability, metadata, scholarly communication},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -43,90 +51,63 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
-% Manuscript styling
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\shorttitle{Machine Readable Hypotheses}
+\affiliation{
+\vspace{0.5cm}
+\textsuperscript{1} School of Innovation Sciences, Eindhoven University of Technology\\\textsuperscript{2} Institute of Neuroscience and Psychology, University of Glasgow}
+\keywords{hypothesis testing, machine readability, metadata, scholarly communication\newline\indent Word count: 4178}
+\usepackage{csquotes}
 \usepackage{upgreek}
 \captionsetup{font=singlespacing,justification=justified}
 
-% Table formatting
 \usepackage{longtable}
 \usepackage{lscape}
-% \usepackage[counterclockwise]{rotating}   % Landscape page setup for large tables
-\usepackage{multirow}		% Table styling
-\usepackage{tabularx}		% Control Column width
-\usepackage[flushleft]{threeparttable}	% Allows for three part tables with a specified notes section
-\usepackage{threeparttablex}            % Lets threeparttable work with longtable
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage[flushleft]{threeparttable}
+\usepackage{threeparttablex}
 
-% Create new environments so endfloat can handle them
-% \newenvironment{ltable}
-%   {\begin{landscape}\begin{center}\begin{threeparttable}}
-%   {\end{threeparttable}\end{center}\end{landscape}}
 \newenvironment{lltable}{\begin{landscape}\begin{center}\begin{ThreePartTable}}{\end{ThreePartTable}\end{center}\end{landscape}}
 
-% Enables adjusting longtable caption width to table width
-% Solution found at http://golatex.de/longtable-mit-caption-so-breit-wie-die-tabelle-t15767.html
 \makeatletter
 \newcommand\LastLTentrywidth{1em}
 \newlength\longtablewidth
 \setlength{\longtablewidth}{1in}
 \newcommand{\getlongtablewidth}{\begingroup \ifcsname LT@\roman{LT@tables}\endcsname \global\longtablewidth=0pt \renewcommand{\LT@entry}[2]{\global\advance\longtablewidth by ##2\relax\gdef\LastLTentrywidth{##2}}\@nameuse{LT@\roman{LT@tables}} \fi \endgroup}
 
-% \setlength{\parindent}{0.5in}
-% \setlength{\parskip}{0pt plus 0pt minus 0pt}
 
-% \usepackage{etoolbox}
-\makeatletter
-\patchcmd{\HyOrg@maketitle}
-  {\section{\normalfont\normalsize\abstractname}}
-  {\section*{\normalfont\normalsize\abstractname}}
-  {}{\typeout{Failed to patch abstract.}}
-\makeatother
-\shorttitle{Machine Readable Hypotheses}
-\author{Daniël Lakens\textsuperscript{1}\ \& Lisa M. DeBruine\textsuperscript{2}}
-\affiliation{
-\vspace{0.5cm}
-\textsuperscript{1} School of Innovation Sciences, Eindhoven University of Technology\\\textsuperscript{2} Institute of Neuroscience and Psychology, University of Glasgow}
-\authornote{Both authors contributed equally to the manuscript. First authorship was determined based on a Great League trainer battle between the authors in Pokemon Go.
-
-Lisa DeBruine  https://orcid.org/0000-0002-7523-5539 
-
-Daniël Lakens  https://orcid.org/0000-0002-0247-239X
-
-
-Correspondence concerning this article should be addressed to Daniël Lakens, ATLAS 9.402, 5600 MB, Eindhoven, The Netherlands. E-mail: D.Lakens@tue.nl}
-\note{ }
-\keywords{hypothesis testing, machine readability, metadata, scholarly communication\newline\indent Word count: }
 \usepackage{lineno}
 
 \linenumbers
-\usepackage{csquotes}
 \usepackage{float}
 \floatplacement{figure}{H}
 \raggedbottom
 \usepackage{tcolorbox}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[shorthands=off,main=english]{babel}
-\else
-  % load polyglossia as late as possible as it *could* call bidi if RTL lang (e.g. Hebrew or Arabic)
-  \usepackage{polyglossia}
-  \setmainlanguage[]{english}
-\fi
 
 \title{Improving Transparency, Falsifiability, and Rigour by Making Hypothesis Tests Machine Readable}
-
+\author{Daniël Lakens\textsuperscript{1}~\& Lisa M. DeBruine\textsuperscript{2}}
 \date{}
 
+\authornote{Both authors contributed equally to the manuscript. First authorship was determined based on a Great League trainer battle between the authors in Pokemon Go.
+
+Lisa DeBruine \url{https://orcid.org/0000-0002-7523-5539}
+Daniël Lakens \url{https://orcid.org/0000-0002-0247-239X}
+
+Correspondence concerning this article should be addressed to Daniël Lakens, ATLAS 9.402, 5600 MB, Eindhoven, The Netherlands. E-mail: \href{mailto:D.Lakens@tue.nl}{\nolinkurl{D.Lakens@tue.nl}}}
+\note{ }
 \abstract{
-Making scientific information machine-readable greatly facilitates its re-use. Many scientific articles have the goal to test a hypothesis, and making the tests of statistical predictions easier to find and access could be very beneficial. We propose an approach that can be used to make hypothesis tests machine readable. We believe there are two benefits to specifying a hypothesis test in a way that a computer can evaluate whether the statistical prediction is corroborated or not. First, hypothesis test will become more transparent, falsifiable, and rigorous. Second, scientists will benefit if information related to hypothesis tests in scientific articles is easily findable and re-usable, for example when performing meta-analyses, during peer review, and when examining meta-scientific research questions. We examine what a machine readable hypothesis test should looks like, and demonstrate the feasibility of machine readable hypothesis tests in a real-life example.
+Making scientific information machine-readable greatly facilitates its re-use. Many scientific articles have the goal to test a hypothesis, and making the tests of statistical predictions easier to find and access could be very beneficial. We propose an approach that can be used to make hypothesis tests machine readable. We believe there are two benefits to specifying a hypothesis test in a way that a computer can evaluate whether the statistical prediction is corroborated or not. First, hypothesis test will become more transparent, falsifiable, and rigorous. Second, scientists will benefit if information related to hypothesis tests in scientific articles is easily findable and re-usable, for example when performing meta-analyses, during peer review, and when examining meta-scientific research questions. We examine what a machine readable hypothesis test should look like, and demonstrate the feasibility of machine readable hypothesis tests in a real-life example.
+
+
+
 }
 
 \begin{document}
@@ -150,18 +131,20 @@ The second problem is that is is not clearly specified what would corroborate th
 
 If we want to make hypothesis tests machine readable, we need to capture all essential aspects of a hypothesis test in a machine readable data structure. A hypothesis test is a methodological procedure to evaluate a prediction that can be described on a conceptual level (e.g., people exhibit higher levels of prosocial behavior towards those who physically resemble them), an operationalized level (e.g., people playing a trust game make more trusting decisions when the person they play against is a self morph versus an other morph), and a statistical level (e.g., the average number of trust moves is statistically larger for games against self morphs than against other morphs in a dependent \emph{t}-test).
 
-We distinguish the following components of a statistical prediction: 1) a statistical test, 2) a test result, and 3) one or more criterion values that the test result is compared to. For example, our statistical prediction might be that we will observe a positive difference in the means between two measurements, which will be examined in a dependent \emph{t}-test, from which we will determine the lower and upper 97.5\% confidence interval around the mean difference, which we will compare against a value of 0. Statistical hypotheses are probabilistic, and probabilistic hypotheses can be made falsifiable \enquote{by specifying certain rejection rules which may render statistically interpreted evidence \enquote{inconsistent} with the probabilistic theory} (Lakatos, 1978). A hypothesis test thus requires researchers to specify when the observed results of a statistical test will lead them to act as if their prediction is consistent with the data, inconsistent with the data, or inconclusive (Dienes, 2019; Neyman, Pearson, \& Pearson, 1933).
+We distinguish the following components of a statistical prediction: 1) a statistical test, 2) a test result, and 3) one or more criterion values that the test result is compared to. For example, our statistical prediction might be that we will observe a positive difference in the means between two measurements, which will be examined in a dependent \emph{t}-test, from which we will determine the lower and upper 97.5\% confidence interval around the mean difference, which we will compare against a value of 0. Statistical hypotheses are probabilistic, and probabilistic hypotheses can be made falsifiable \enquote{by specifying certain rejection rules which may render statistically interpreted evidence \enquote{inconsistent} with the probabilistic theory} (Lakatos, 1978). A hypothesis test thus requires researchers to specify when the observed results of a statistical test will lead them to act as if their prediction is consistent with the data, inconsistent with the data, or inconclusive (Neyman, Pearson, \& Pearson, 1933).
 
-As highlighted above, one limitation of current practice is that researchers often do not explicitly state what would corroborate or falsify their prediction. To be able to unambiguously evaluate a hypothesis, researchers need to specify evaluation rules for when they will interpret statistical test results as corroborating a prediction, falsifying of a prediction, or when a result will be treated as inconclusive. For example, a prediction might be consistent with a main effect of A, or an ordinal interaction between A and B, but inconsistent with a disordinal interaction between A and B. However, the full pattern of possible results that would corroborate or falsify a prediction is seldom explicit. There are different statistical approaches that can be used to statistically conclude a prediction is falsified, and one should always think meta-analytically, and keep random variation in mind. In practice, corroborating or falsifying a statistical prediction is rarely sufficient to draw strong conclusions about a theoretical prediction (Lakatos, 1978).
+As highlighted above, one limitation of current practice when testing hypotheses is that researchers often do not explicitly state what would corroborate or falsify their prediction. To be able to unambiguously evaluate a hypothesis, researchers need to specify the rules they will use to evaluate whether statistical results corroborate a prediction, falsify it, or when the results are inconclusive. For example, in a 2x2 design many different patterns of means across the four cells could be predicted (e.g., one of two main effects, or a specific pattern of the observed interaction effect), but the full pattern of possible results that would corroborate or falsify a prediction is seldom made explicit.
 
-One approach, known as equivalence testing (Lakens, Scheel, \& Isager, 2018), requires researchers to specify a smallest effect size of interest, and tests if the presence of an effect that is large enough to be deemed interesting can be statistically rejected. Continuing our example, we might conclude our prediction is corroborated when we can statistically conclude the observed mean difference is greater than zero, and not statistically smaller than the smallest effect size we care about. The prediction would be falsified if the effect is statistically smaller than the smallest effect size of interest, and inconclusive if we can neither conclude the effect is statistically greater than zero, nor statistically smaller than the smallest effect size we care about. If our statistical test is a dependent \emph{t}-test, our test result is the upper and lower bound of a 97.5\% confidence interval (i.e., a hypothesis test with a 2.5\% alpha level), and our smallest effect size of interest is 0.2, we can conclude that we have corroborated our prediction if the lower bound of our 97.5\% CI is larger than 0 and the upper bound is not smaller than 0.2. Our prediction is falsified if the upper bound of our 97.5\% CI is smaller than 0.2, and our data is inconclusive in all other situations.
+There are different approaches that can be used to statistically conclude that the prediction made in a study is falsified. In practice, corroborating or falsifying a statistical prediction in a single study is rarely sufficient to draw strong conclusions about a theory (Lakatos, 1978), and one should always keep random variation in mind when interpreting statistical results.
 
-Another approach compares the likelihood of the observed data under null and theoretical models (Dienes, 2019). If the ratio of these likelihoods (the Bayes factor) is greater than some specified criterion (e.g., 6, used by the journal \emph{Cortex}), this is interpreted as evidence for the hypothetical model. If the Bayes factor is less than the reciprocal of the criterion (e.g., 1/6), this is interpreted as evidence for the null model. All other values are interpreted as inconclusive evidence.
+One approach to conclude a prediction is falsified is known as equivalence testing (Lakens, Scheel, \& Isager, 2018). And equivalence test requires researchers to specify a smallest effect size of interest, and tests if the presence of an effect that is large enough to be deemed interesting can be statistically rejected. Continuing our example, we might conclude our prediction is corroborated when we can statistically conclude the observed mean difference is greater than zero, and not statistically smaller than the smallest effect size we care about. The prediction would be falsified if the effect is statistically smaller than the smallest effect size of interest, and inconclusive if we can neither conclude the effect is statistically greater than zero, nor statistically smaller than the smallest effect size we care about. If our statistical test is a dependent \emph{t}-test, our test result is the upper and lower bound of a 97.5\% confidence interval (i.e., a hypothesis test with a 2.5\% alpha level), and our smallest effect size of interest is 0.2, we can conclude that we have corroborated our prediction if the lower bound of our 97.5\% CI is larger than 0 and the upper bound is not smaller than 0.2. Our prediction is falsified if the upper bound of our 97.5\% CI is smaller than 0.2, and our data is inconclusive in all other situations.
+
+An important requirement to make statistical hypothesis machine readable is to identify the individual components that make it possible to evaluate a hypothesis test. Our example relies on \emph{hypothesis} that is tested in an \emph{analysis} that takes \emph{data} as input and returns test \emph{results}. Some of these tests results will be compared to \emph{criteria}, used in the \emph{evaluation} of the test result. For example, imagine a hypothesis predicts a certain difference in means between conditions. The data is analyzed with a Bayesian \emph{t}-test (Dienes, 2019), and if the resulting Bayes factor is greater than some specified criterion (e.g., 6, used by the journal \emph{Cortex}), the prediction is considered corroborated. If the Bayes factor is less than the reciprocal of the criterion (e.g., 1/6), this is interpreted as evidence for the null model, and the prediction is falsified. All other values are interpreted as inconclusive evidence.
 
 \hypertarget{computationally-evaluating-hypotheses}{%
 \subsection{Computationally Evaluating Hypotheses}\label{computationally-evaluating-hypotheses}}
 
-If a prediction is machine readable, it is possible to automatically determine if a prediction is corroborated by the data. We envision machine readable hypothesis tests as part of a completely reproducible workflow. Computer scripts will load the raw data, and if needed create the analytic data from the raw data (e.g., outlier removal, transformations, computing sum scores according to pre-specified rules). The statistical test is automatically run on the analytic data, and the relevant test statistics are retrieved. These test statistics are compared against pre-specified criteria, based on decision rules that evaluate whether the prediction is corroborated, falsified, or inconclusive. All the information that is required to perform these operations is stored in a structured meta-data file.
+If a prediction is machine readable, it is possible to automatically determine if a prediction is corroborated by the data. We envision machine readable hypothesis tests as part of a completely reproducible workflow. Computer scripts will load the raw data, and if needed create the analytic data from the raw data (e.g., outlier removal, transformations, computing sum scores according to pre-specified rules). The statistical test is automatically performed on the analytic data, and the relevant test statistics are retrieved. These test statistics are compared against pre-specified criteria, based on decision rules that evaluate whether the prediction is corroborated, falsified, or inconclusive. All the information that is required to perform these operations is stored in a structured meta-data file.
 
 We provide an \href{example/example.Rmd}{R script} with a concrete example of a machine-readable statistical prediction for the study by DeBruine (2002) described above. It is written using the R package \href{https://scienceverse.github.io/scienceverse/}{\textbf{scienceverse}} and produces a \href{example/postreg.json}{JSON file}, which is an open-standard file format that can be used to transmit data. Because it is an open-standard file format, it can easily be converted into any other data file format such as YAML or JATS, which in essence are all nested lists. It can also be converted to a \href{example/postreg.html}{human-readable report}, summarising the study with verbal descriptions and a list containing the conclusion for each statistical prediction.
 
@@ -187,7 +170,7 @@ The top level list (Box 1) contains components describing different aspects of t
 \hypertarget{hypotheses}{%
 \subsubsection{Hypotheses}\label{hypotheses}}
 
-A study could contain multiple hypotheses, but our example contains only one. Each \texttt{hypothesis} (Box 2) consists of an \texttt{id} for referencing the hopthesis in other components, a verbal human-readable \texttt{description}, one or more \texttt{criteria} to evaluate analysis results, and rules to determine \texttt{corroboration} or \texttt{falsification} of the hypothesis. If the data are available, these rules are automatically evaluated and a \texttt{conclusion} of \enquote{corroborate}, \enquote{falsify}, or \enquote{inconclusive} is added.
+A study could contain multiple hypotheses, but our example contains only one. Each \texttt{hypothesis} (Box 2) consists of an \texttt{id} for referencing the hypothesis in other components, a verbal human-readable \texttt{description}, one or more \texttt{criteria} to evaluate analysis results, and rules to determine \texttt{corroboration} or \texttt{falsification} of the hypothesis. If the data are available, these rules are automatically evaluated and a \texttt{conclusion} of \enquote{corroborate}, \enquote{falsify}, or \enquote{inconclusive} is added.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 2. The hypothesis component.]
 \begin{verbatim}
@@ -215,7 +198,7 @@ A study could contain multiple hypotheses, but our example contains only one. Ea
 \hypertarget{criteria}{%
 \subsubsection{Criteria}\label{criteria}}
 
-Each criterion (Box 3) needs an \texttt{id} to be able to reference them in the evaluations and references a named \texttt{result} from an analysis with the id \texttt{analysis\_id}. An \texttt{operator} and a \texttt{comparator} are provided for each criterion to specify the method of comparison (e.g., \textgreater{}, \textless{}, =, !=) and the comparison value (e.g., 0). For example, the first criterion specifies that if the statistical result \enquote{conf.int{[}1{]}} from \enquote{trust\_analysis} is \enquote{\textgreater{}} than \enquote{0}, then the criterion \enquote{trust\_lowbound} evaluates to a \texttt{conclusion} of \enquote{true}. In other words, if we can statistically reject the null hypothesis (because the lower bound of the confidence interval does not overlap with 0), this criterion of our statistical prediction is corroborated.
+Each criterion (Box 3) needs an \texttt{id} to be able to reference them in the evaluations and references a named \texttt{result} from an analysis with the id \texttt{analysis\_id}. An \texttt{operator} and a \texttt{comparator} are provided for each criterion to specify the method of comparison (e.g., \textgreater, \textless, =, !=) and the comparison value (e.g., 0). For example, the first criterion specifies that if the statistical result \enquote{conf.int{[}1{]}} from \enquote{trust\_analysis} is \enquote{\textgreater{}} than \enquote{0}, then the criterion \enquote{trust\_lowbound} evaluates to a \texttt{conclusion} of \enquote{true}. In other words, if we can statistically reject the null hypothesis (because the lower bound of the confidence interval does not overlap with 0), this criterion of our statistical prediction is corroborated. Although in essence this describes nothing more than what we do when we interpret test results, this decision process is now captured and made explicit in machine-readable code.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 3. Criteria for evaluation.]
 \begin{verbatim}
@@ -259,7 +242,7 @@ Each criterion (Box 3) needs an \texttt{id} to be able to reference them in the 
 \hypertarget{hypothesis-evaluation}{%
 \subsubsection{Hypothesis Evaluation}\label{hypothesis-evaluation}}
 
-The \texttt{corroboration} and \texttt{falsification} sub-components (Box 4.) describe rules to determine corroboration or falsification of a hypothesis from the criteria conclusions, and each consists of three elements. The \texttt{description} element contains verbal descriptions of the decision rules for concluding the hypothesis is corroborated or falsified. The \texttt{evaluation} element contains a logical version referencing the criteria IDs. For example, \enquote{\texttt{(trust\_lowbound\ \&\ trust\_highbound)\ \textbar{}\ (recip\_lowbound\ \&\ recip\_highbound)}} means that the corroboration \texttt{result} will be set to \enquote{true} if the first two criteria are both true, or if the last two criteria are both true, while \enquote{\texttt{!trust\_highbound\ \&\ !recip\_highbound}} means that the falsify conclusion will be set to \enquote{true} if both of these criteria are false.
+The \texttt{corroboration} and \texttt{falsification} sub-components (Box 4) describe rules to determine corroboration or falsification of a hypothesis from the criteria conclusions, and each consists of three elements. The \texttt{description} element contains verbal descriptions of the decision rules for concluding the hypothesis is corroborated or falsified. The \texttt{evaluation} element contains a logical version referencing the criteria \texttt{id}. For example, \enquote{\texttt{(trust\_lowbound\ \&\ trust\_highbound)\ \textbar{}\ (recip\_lowbound\ \&\ recip\_highbound)}} means that the corroboration \texttt{result} will be set to \enquote{true} if the first two criteria are both true, or if the last two criteria are both true, while \enquote{\texttt{!trust\_highbound\ \&\ !recip\_highbound}} means that the falsify conclusion will be set to \enquote{true} if both of these criteria are false (note that an exclamation mark means \enquote{not}).
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 4. Corroboration and falsification rules.]
 \begin{verbatim}
@@ -287,7 +270,7 @@ The \texttt{corroboration} and \texttt{falsification} sub-components (Box 4.) de
 \hypertarget{analyses}{%
 \subsubsection{Analyses}\label{analyses}}
 
-Each analysis is specified in the \texttt{analysis} component (Box 5). An analysis consists of an \texttt{id} to reference the statistical test when evaluating the criteria and the \texttt{code} used to run the analysis. Once data are attached and the analyses are run, a list of named \texttt{results} is added to be referenced in the criteria. Each analysis can also contain additional information, such as the software used to perform the analysis. The example below specifies two \emph{t}-tests, using the \texttt{t.test} function in R. In scienceverse, short analyses can be added manually, or longer ones references to an external file.
+Each analysis is specified in the \texttt{analysis} component (Box 5). An analysis consists of an \texttt{id} to reference the statistical test when evaluating the criteria and the \texttt{code} used to run the analysis. Once data are attached and the analyses are run, a list of named \texttt{results} is added to be referenced in the criteria. Each analysis can also contain additional information, such as the software used to perform the analysis. The example below specifies two \emph{t}-tests, using the \texttt{t.test} function in R. In the working scienceverse prototype used in this manuscript, short analyses can be added directly, while longer analysis scripts that return a test result can be added by referencing to an external analysis script.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 5. The analysis component.]
 \begin{verbatim}
@@ -325,7 +308,7 @@ Each analysis is specified in the \texttt{analysis} component (Box 5). An analys
 \hypertarget{data}{%
 \subsubsection{Data}\label{data}}
 
-Each dataset can be specified in the \texttt{data} component (Box 6). A dataset consists of an \texttt{id} to reference the dataset in analyses and information about how to obtain the data (e.g., \texttt{doi}, \texttt{url}). The \texttt{codebook} contains descriptions of each column, and it is even possible to include the analytic \texttt{data} values in this component. Below, we present a data component with a codebook created by scienceverse using the \href{https://docs.google.com/document/d/1u8o5jnWk0Iqp_J06PTu5NjBfVsdoPbBhstht6W0fFp0/edit\#heading=h.caxnnxqaobj}{Psych-DS 0.1.0 format}, but the descriptors for each column can be arbitrarily detailed or follow other published formats. This, they can be automatically extracted from existing data structures, such as SPSS files. For other software that helps researchers to create and share machine-readable codebooks, see Arslan (2019).
+Each dataset can be specified in the \texttt{data} component (Box 6). A dataset consists of an \texttt{id} to reference the dataset in analyses and information about how to obtain the data (e.g., \texttt{doi}, \texttt{url}). The \texttt{codebook} contains descriptions of each column, but it is even possible to include the \texttt{data} file in this component. By storing the data underlying the reported analyses as nested lists in the same JSON file together with good meta-data, a reported analyses could be completely reproduced in the future with a single commond. Furthermore, it becomes very easy to perform additional analyses or sensitivity analyses on the data. Below, we present a data component with a codebook created by scienceverse using the \href{https://docs.google.com/document/d/1u8o5jnWk0Iqp_J06PTu5NjBfVsdoPbBhstht6W0fFp0/edit\#heading=h.caxnnxqaobj}{Psych-DS 0.1.0 format}, which is currently still in development. The descriptors for each column can be arbitrarily detailed, or follow other meta-data formats. For other software that helps researchers to create and share machine-readable codebooks, see Arslan (2019).
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 6. The data component.]
 \begin{verbatim}
@@ -383,7 +366,9 @@ Each dataset can be specified in the \texttt{data} component (Box 6). A dataset 
 \hypertarget{automatic-evaluation}{%
 \subsubsection{Automatic Evaluation}\label{automatic-evaluation}}
 
-Now that the prediction is specified in a machine readable format, it is possible for the statistical prediction to be evaluated automatically (although results can be added manually where code to automatically evaluate specific analyses is not yet available). Based on the information specified in the analyses, criteria, and data components, the \texttt{study\_analyze} function in scienceverse can read in the analytic data, perform each analysis, and store the results. For example, the \enquote{trust\_analysis} can be performed by running the analysis \texttt{t.test(x\ =\ kin\textbackslash{}\$trust\_self,\ y\ =\ kin\$trust\_other,\ paired\ =\ TRUE,\ conf.level\ =\ .975)} after the data is loaded as an object named \enquote{kin}. We store the result of this analysis (e.g., the t.test function in R returns a list of named numbers, including \enquote{conf.int}: {[}0.0213, 0.9787{]}). The criteria are then evaluated against the results of the analyses. For example, because the first number in the \enquote{conf.int} result (0.0213) is larger (\enquote{\textgreater{}}) than zero (\enquote{0}), we can store the conclusion that this criterion is \enquote{true} (see Box 3). After the code has drawn conclusions about whether each criterion is met or not, based on the results of the analyses, the evaluation rules can be used to determine whether the prediction is corroborated, falsified, or neither (and thus the results are inconclusive). For the prediction to be corroborated, the criteria for \enquote{trust\_lowbound} and \enquote{trust\_highbound} have to be met, and/or the criteria for \enquote{recip\_lowbound} and \enquote{recip\_highbound} have to be met. Since the conclusions for \enquote{trust\_lowbound} and \enquote{trust\_highbound} are both true, the prediction is corroborated, and because it is not true that both upper bounds for the confidence interval are smaller than 0.2, the prediction is not falsified. The overall \texttt{conclusion} (Box 3) is therefore that our statistical prediction is corroborated.
+Now that the prediction is specified in a machine readable format, it is possible for the statistical prediction to be evaluated automatically. Automatic evaluation of machine readable hypotheses has at least two useful functions during the peer review process. First, we foresee a future where researchers are required to submit fully computationally reproducible analysis scripts with their submissions. This will require editorial assistants or reviewers to check the computational reproducibility of the reported results in a manuscript. Machine readable hypothesis tests would make this check a matter of running a single function. For example, based on the information specified in the analyses, criteria, and data components, the \texttt{study\_analyze} function in scienceverse demonstrates how it would be possible to read in the analytic data, perform each analysis, and store the results. For example, the \enquote{trust\_analysis} can be performed by running the analysis \texttt{t.test(x\ =\ kin\$trust\_self,\ y\ =\ kin\$trust\_other,\ paired\ =\ TRUE,\ conf.level\ =\ .975)} after the data is loaded as an object named \enquote{kin}. We store the result of this analysis (e.g., the t.test function in R returns a list of named numbers, including \enquote{conf.int}: {[}0.0213, 0.9787{]}). The criteria are then evaluated against the results of the analyses. For example, because the first number in the \enquote{conf.int} result (0.0213) is larger (\enquote{\textgreater{}}) than zero (\enquote{0}), we can store the conclusion that this criterion is \enquote{true} (see Box 3).
+
+After the code has drawn conclusions about whether each criterion is met or not, based on the results of the analyses, the evaluation rules can be used to determine whether the prediction is corroborated, falsified, or neither (and thus the results are inconclusive). For the prediction to be corroborated, the criteria for \enquote{trust\_lowbound} and \enquote{trust\_highbound} have to be met, and/or the criteria for \enquote{recip\_lowbound} and \enquote{recip\_highbound} have to be met. Since the conclusions for \enquote{trust\_lowbound} and \enquote{trust\_highbound} are both true, the prediction is corroborated, and because it is not true that both upper bounds for the confidence interval are smaller than 0.2, the prediction is not falsified. The overall \texttt{conclusion} is therefore that our statistical prediction is corroborated. It will typically be useful to return a human readable summary, which is presented in Figure 1 below. Such a human-readable summary would allow editorial assistants or reviewers to quickly check the computational reproducibility of the reported results.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 7. Results of data analysis.]
 \begin{verbatim}
@@ -424,16 +409,27 @@ Now that the prediction is specified in a machine readable format, it is possibl
 \end{verbatim}
 \end{tcolorbox}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics{images/output.png}
+\caption{Example of machine readable output generated by scienceverse that shows the results and evaluation of the hypotheses. \label{fig1}}
+\end{figure}
+
 \hypertarget{benefits-of-machine-readability}{%
 \subsection{Benefits of Machine Readability}\label{benefits-of-machine-readability}}
 
-We believe the benefits of making statistical predictions machine readable are worth the effort. First, machine-readable hypotheses completely remove ambiguity about what researchers predict and which criteria must be met to conclude a statistical prediction hypothesis is corroborated. Although ambiguity can be removed in other ways, the formalized approach as illustrated above is perfectly suited for this goal. Predictions are explicitly linked to the tests that are performed to evalaute if the prediction is corroborated or not. The exact test is specified, which prevents flexibility in the data analysis. This method prevents researchers who will replicate the study from having to infer the criteria for corroboration or falsification from the observed pattern of results and the conclusion. If a researchers feels the statistical prediction can be tested in different ways, each equally reasonable, a range of sensitivity analyses across which the prediction should hold can be specified.
+We believe the benefits of making statistical predictions machine readable are worth the extra effort. First, machine-readable hypotheses remove ambiguity about what researchers predict and which criteria must be met to conclude a statistical hypothesis is corroborated. Predictions are explicitly linked to the tests that are performed to evalaute if the prediction is corroborated or not. The exact test is specified, which prevents flexibility in the data analysis. Furthermore, by specifying the criteria for corroboration or falsification explicitly prevents future researchers who will replicate the study from having to infer which results would falsify the original finding. Although machine readable hypotheses might feel extremely rigid, it is possible to specify a range of sensitivity analyses across which the prediction should hold.
 
-While this method obviously cannot ensure that the logic behind predictions or criteria for corroboration or falsification are correct, the process of writing a machine-readable statistical prediction has a secondary benefit of providing a framework for thinking through the logic of a prediction. If one finds it impossible to specify the ranges of results that will corroborate or falsify a prediction, it is likely that the hypothesis is not yet well-specified enough for confirmatory hypothesis testing. Hypothesis tests are an extremely formalized procedure to test predictions. Making this clear might make researchers realize they are not yet ready to test a hypothesis, and remind them of the importance and value of exploratory research.
+Another benefit of making statistical hypotheses machine readable is that many important aspects of the hypothesis test become accessible, findable, and usable. This will benefit researchers in the future. We can imagine a utopian future where meta-data files such as the example in Box 1 are accessible by browsing to a website that consists of the DOI, appended by /meta (e.g., \url{https://doi.org/10.1098/rspb.2002.2034/meta/}). Researchers can access these files to load all the information that is available about statistical predictions. For example, when a completely reproducible workflow is used, and data can be accessed as part of the JSON file, the meta-data file should be sufficient to easily calculate or access effect sizes from the performed statistical tests for meta-analyses.
 
-Another benefit of making statistical hypotheses machine readable is that many important aspects of the hypothesis test become accessible, findable, and usable. This will benefit researchers in the future. We can imagine a utopian future where meta-data files such as the example in Box 1 are accessible by browsing to a website that consists of the DOI, appended by /meta (e.g., \url{https://doi.org/10.1098/rspb.2002.2034/meta/}). Researchers can access these files to load all the information that is available about statistical predictions. When a completely reproducible workflow is used, and data can be accessed, the meta-data file should be sufficient to easily calculate or access effect sizes from the performed statistical tests for meta-analyses, and answer meta-scientific questions about, for example, the percentage of statistical predictions that are corroborated in a research area.
+While making hypothesis tests machine readable can obviously not ensure that statistical predictions are sensible or logically coherent, the process of writing a machine-readable statistical prediction could have a secondary benefit of providing a well-structured framework to think through and specify all important aspects of a statistical prediction. This might not be easy. Researchers might find it difficult to specify all required components in advance, or to specify the ranges of results that would corroborate or falsify a prediction. Sometimes a research idea is not yet well-specified enough to be tested in a confirmatory hypothesis test. Hypothesis tests are an extremely formalized procedure to make a decision whether a prediction is corroborated or not. If researchers realize they are actually not yet ready to make a falsifiable statistical prediction when creating a machine readable prediction, we would consider this a benefit as well, and we expect this to be a relatively common consequence of trying to formalize hypothesis tests.
 
-One more immediate use case for machine readable hypothesis tests is the Registered Report publication format (Chambers, 2019). Registered Reports require researchers to clearly specify their statistical prediction, and are developed to reduce flexibility in the statistical analyses. After Stage 1 review based on the introduction, methods, and analysis plan, researchers can receive an \enquote{in principle acceptance}. They then collect the data, and submit a Stage 2 Registered Report that includes the results and conclusion. Reviewers need to evaluate whether the analyses were conducted exactly as planned and whether conclusions follow from the predictions. This aspect of the peer review process is labor intensive and often still somewhat ambiguous, but could be automated if the statistical predictions were machine readable.
+\hypertarget{registered-reports-as-use-case}{%
+\subsection{Registered Reports as Use Case}\label{registered-reports-as-use-case}}
+
+We realize that several aspects of our proposal to make hypothesis tests machine readable sound futuristic. At the same time, we believe immediate use cases for machine readable hypothesis tests already exist in the form of the Registered Report publication format (Chambers, 2019). Registered Reports require researchers to clearly specify their statistical prediction, and are developed to reduce flexibility in the statistical analyses. After Stage 1 review based on the introduction, methods, and analysis plan, researchers can receive an \enquote{in principle acceptance}. They then collect the data, and submit a Stage 2 Registered Report that includes the results and conclusion. Reviewers need to evaluate whether the analyses were conducted exactly as planned and whether conclusions follow from the predictions. This aspect of the peer review process is labor intensive and often still somewhat ambiguous, but could be automated if the statistical predictions were machine readable.
+
+Scienceverse illustrates one possible workflow where after specifying the hypotheses at a Stage 1 submission, a machine readable html report can be produced with the \texttt{study\_save} function. This report looks similar to Figure 1, without any of the lines containing coloured true or false evaluations of the predictions. When the data is collected, reviewers should be able to use the JSON file generated at Stage 1, load the collected data with the \texttt{add\_data} function, run the preregistered analyses, and generate a human readable report as in Figure 1. This should make it realtively easy for reviewers to compare if planned and reported analyses.
 
 \hypertarget{conclusions}{%
 \subsection{Conclusions}\label{conclusions}}
@@ -473,25 +469,46 @@ LMD is supported by European Research Council grant \#647910. DL is funded by VI
 
 \hypertarget{refs}{}
 \leavevmode\hypertarget{ref-arslan2019}{}%
-Arslan, R. C. (2019). How to automatically document data with the codebook package to facilitate data reuse. \emph{Advances in Methods and Practices in Psychological Science}, \emph{2}(2), 169--187. \url{https://doi.org/10.1177/2515245919838783}
+Arslan, R. C. (2019). How to automatically document data with the codebook package to facilitate data reuse. \emph{Advances in Methods and Practices in Psychological Science}, \emph{2}(2), 169--187. doi:\href{https://doi.org/10.1177/2515245919838783}{10.1177/2515245919838783}
 
 \leavevmode\hypertarget{ref-chambers2019}{}%
-Chambers, C. (2019). What's next for registered reports? \emph{Nature}, \emph{573}, 187--189. \url{https://doi.org/10.1038/d41586-019-02674-6}
+Chambers, C. (2019). What's next for registered reports? \emph{Nature}, \emph{573}, 187--189. doi:\href{https://doi.org/10.1038/d41586-019-02674-6}{10.1038/d41586-019-02674-6}
 
 \leavevmode\hypertarget{ref-debruine2002}{}%
-DeBruine, L. M. (2002). Facial resemblance enhances trust. \emph{Proceedings of the Royal Society of London. Series B: Biological Sciences}, \emph{269}, 1307--1312. \url{https://doi.org/10.1098/rspb.2002.2034}
+DeBruine, L. M. (2002). Facial resemblance enhances trust. \emph{Proceedings of the Royal Society of London. Series B: Biological Sciences}, \emph{269}, 1307--1312. doi:\href{https://doi.org/10.1098/rspb.2002.2034}{10.1098/rspb.2002.2034}
 
 \leavevmode\hypertarget{ref-dienes2019}{}%
-Dienes, Z. (2019). How do I know what my theory predicts? \emph{Advances in Methods and Practices in Psychological Science}, \emph{2}(4), 364--377. \url{https://doi.org/10.1177/2515245919876960}
+Dienes, Z. (2019). How do I know what my theory predicts? \emph{Advances in Methods and Practices in Psychological Science}, \emph{2}(4), 364--377. doi:\href{https://doi.org/10.1177/2515245919876960}{10.1177/2515245919876960}
 
 \leavevmode\hypertarget{ref-lakatos1978}{}%
 Lakatos, I. (1978). \emph{The methodology of scientific research programmes: Volume 1: Philosophical papers.} Cambridge University Press.
 
 \leavevmode\hypertarget{ref-lakens2018}{}%
-Lakens, D., Scheel, A. M., \& Isager, P. M. (2018). Equivalence testing for psychological research: A tutorial. \emph{Advances in Methods and Practices in Psychological Science}, \emph{1}(2), 259--269. \url{https://doi.org/10.1177/2515245918770963}
+Lakens, D., Scheel, A. M., \& Isager, P. M. (2018). Equivalence testing for psychological research: A tutorial. \emph{Advances in Methods and Practices in Psychological Science}, \emph{1}(2), 259--269. doi:\href{https://doi.org/10.1177/2515245918770963}{10.1177/2515245918770963}
 
 \leavevmode\hypertarget{ref-neyman1933}{}%
-Neyman, J., Pearson, E. S., \& Pearson, K. (1933). IX. On the problem of the most efficient tests of statistical hypotheses. \emph{Philosophical Transactions of the Royal Society of London. Series A, Containing Papers of a Mathematical or Physical Character}, \emph{231}(694-706), 289--337. \url{https://doi.org/10.1098/rsta.1933.0009}
+Neyman, J., Pearson, E. S., \& Pearson, K. (1933). IX. On the problem of the most efficient tests of statistical hypotheses. \emph{Philosophical Transactions of the Royal Society of London. Series A, Containing Papers of a Mathematical or Physical Character}, \emph{231}(694-706), 289--337. doi:\href{https://doi.org/10.1098/rsta.1933.0009}{10.1098/rsta.1933.0009}
+
+\leavevmode\hypertarget{ref-arslan2019}{}%
+Arslan, R. C. (2019). How to automatically document data with the codebook package to facilitate data reuse. \emph{Advances in Methods and Practices in Psychological Science}, \emph{2}(2), 169--187. doi:\href{https://doi.org/10.1177/2515245919838783}{10.1177/2515245919838783}
+
+\leavevmode\hypertarget{ref-chambers2019}{}%
+Chambers, C. (2019). What's next for registered reports? \emph{Nature}, \emph{573}, 187--189. doi:\href{https://doi.org/10.1038/d41586-019-02674-6}{10.1038/d41586-019-02674-6}
+
+\leavevmode\hypertarget{ref-debruine2002}{}%
+DeBruine, L. M. (2002). Facial resemblance enhances trust. \emph{Proceedings of the Royal Society of London. Series B: Biological Sciences}, \emph{269}, 1307--1312. doi:\href{https://doi.org/10.1098/rspb.2002.2034}{10.1098/rspb.2002.2034}
+
+\leavevmode\hypertarget{ref-dienes2019}{}%
+Dienes, Z. (2019). How do I know what my theory predicts? \emph{Advances in Methods and Practices in Psychological Science}, \emph{2}(4), 364--377. doi:\href{https://doi.org/10.1177/2515245919876960}{10.1177/2515245919876960}
+
+\leavevmode\hypertarget{ref-lakatos1978}{}%
+Lakatos, I. (1978). \emph{The methodology of scientific research programmes: Volume 1: Philosophical papers.} Cambridge University Press.
+
+\leavevmode\hypertarget{ref-lakens2018}{}%
+Lakens, D., Scheel, A. M., \& Isager, P. M. (2018). Equivalence testing for psychological research: A tutorial. \emph{Advances in Methods and Practices in Psychological Science}, \emph{1}(2), 259--269. doi:\href{https://doi.org/10.1177/2515245918770963}{10.1177/2515245918770963}
+
+\leavevmode\hypertarget{ref-neyman1933}{}%
+Neyman, J., Pearson, E. S., \& Pearson, K. (1933). IX. On the problem of the most efficient tests of statistical hypotheses. \emph{Philosophical Transactions of the Royal Society of London. Series A, Containing Papers of a Mathematical or Physical Character}, \emph{231}(694-706), 289--337. doi:\href{https://doi.org/10.1098/rsta.1933.0009}{10.1098/rsta.1933.0009}
 
 \endgroup
 
