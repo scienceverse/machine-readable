@@ -1568,7 +1568,7 @@ div.tocify {
 </div>
 <div id="criteria" class="section level3">
 <h3>Criteria</h3>
-<p>Next, add the criteria you will need to check to corroborate or falsify each hypothesis. Each criterion needs a unique <code>id</code> so you can reference it next in the evaluation. Then, specify the <code>analysis_id</code> where you’ll look for the result. For example, the analysis <code>trust_analysis</code> returns a list from the function <code>t.test</code>, which includes a value for <code>conf.int</code>. To see if the first number in this vector is larger than 0, set <code>result</code> to “conf.int[1]”, <code>operator</code> to “&gt;” , and <code>comparator</code> to <span class="math inline">\(0\)</span>. The options for <code>operator</code> are “&gt;”, “&lt;”, “=”, and “!=”.</p>
+<p>Next, add the criteria you will need to check to corroborate or falsify each hypothesis. Each criterion needs a unique <code>id</code> so you can reference it next in the evaluation. Then, specify the <code>analysis_id</code> where you’ll look for the result. For example, the analysis <code>trust</code> returns a list from the function <code>t.test</code>, which includes a value for <code>conf.int</code>. To see if the first number in this vector is larger than 0, set <code>result</code> to “conf.int[1]”, <code>operator</code> to “&gt;” , and <code>comparator</code> to <span class="math inline">\(0\)</span>. The options for <code>operator</code> are “&gt;”, “&lt;”, “=”, and “!=”.</p>
 <pre class="r"><code>study &lt;- study %&gt;%
   add_criterion(id = &quot;trust_lowbound&quot;,
                 analysis_id = &quot;trust&quot;,
@@ -1638,28 +1638,38 @@ desc &lt;- list(
 study &lt;- add_data(study, id = &quot;kin&quot;, 
                   data = kin_data, 
                   vardesc = desc, 
-                  url = &quot;https://osf.io/ewfhs/&quot;)</code></pre>
+                  url = &quot;https://osf.io/ewfhs/&quot;)
+#&gt; Warning in faux::codebook(data = data, name = name, vardesc = vardesc, schemaVersion = schemaVersion, : The following variable properties are not standard: type
+#&gt; trust_self set to dataType int
+#&gt; trust_other set to dataType int
+#&gt; recip_self set to dataType int
+#&gt; recip_other set to dataType int</code></pre>
 </div>
 <div id="run-analyses" class="section level3">
 <h3>Run Analyses</h3>
 <p>When you run <code>study_analyse</code>, the data are loaded as their <code>id</code> names and the analyses are run in order. The evaluation of each criterion and hypothesis is printed as a message.</p>
 <pre class="r"><code>study &lt;- study_analyse(study)
-#&gt; Hypothesis self_pref, Criterion trust_lowbound:
-#&gt;     conf.int[1] &gt; 0 is TRUE
-#&gt;     conf.int[1] = 0.02
-#&gt; Hypothesis self_pref, Criterion trust_highbound:
-#&gt;     conf.int[2] &gt; 0.2 is TRUE
-#&gt;     conf.int[2] = 0.98
-#&gt; Hypothesis self_pref, Criterion recip_lowbound:
-#&gt;     conf.int[1] &gt; 0 is FALSE
-#&gt;     conf.int[1] = -0.51
-#&gt; Hypothesis self_pref, Criterion recip_highbound:
-#&gt;     conf.int[2] &gt; 0.2 is TRUE
-#&gt;     conf.int[2] = 0.43
-#&gt; Hypothesis self_pref:
-#&gt;     Corroborate: TRUE
-#&gt;     Falsify: FALSE
-#&gt;     Conclusion: corroborate</code></pre>
+#&gt; Hypothesis self_pref: Cues of kinship will increase prosocial behaviour. Cues of kinship will be manipulated by morphed facial self-resemblance. Prosocial behaviour will be measured by responses in the trust game. The prediction is that the number of trusting AND/OR reciprocating moves will be greater to self morphs than to other morphs.
+#&gt; 
+#&gt; Criterion trust_lowbound:
+#&gt; * conf.int[1] &gt; 0 is TRUE
+#&gt; * conf.int[1] = 0.021
+#&gt; 
+#&gt; Criterion trust_highbound:
+#&gt; * conf.int[2] &gt; 0.2 is TRUE
+#&gt; * conf.int[2] = 0.979
+#&gt; 
+#&gt; Criterion recip_lowbound:
+#&gt; * conf.int[1] &gt; 0 is FALSE
+#&gt; * conf.int[1] = -0.509
+#&gt; 
+#&gt; Criterion recip_highbound:
+#&gt; * conf.int[2] &gt; 0.2 is TRUE
+#&gt; * conf.int[2] = 0.426
+#&gt; 
+#&gt; Conclusion: corroborate
+#&gt; * Corroborate ((trust_lowbound &amp; trust_highbound) | (recip_lowbound &amp; recip_highbound)): TRUE
+#&gt; * Falsify (!trust_highbound &amp; !recip_highbound): FALSE</code></pre>
 </div>
 <div id="save" class="section level3">
 <h3>Save</h3>
@@ -1671,10 +1681,38 @@ study_save(study, &quot;postreg.html&quot;, &quot;postreg&quot;)
 </div>
 <div id="reload" class="section level3">
 <h3>Reload</h3>
-<p>You can reload and edit your study by loading the .json file with the study() function. This also makes the analysis functions available.</p>
+<p>You can reload and edit your study by loading the .json file with the study() function.</p>
 <pre class="r"><code>study2 &lt;- study(&quot;postreg.json&quot;)
-#&gt; Loaded custom function: analysis_trust_func
-#&gt; Loaded custom function: analysis_recip_func</code></pre>
+
+study2 # displays a summary
+#&gt; Kinship and Prosocial Behaviour
+#&gt; -------------------------------
+#&gt; 
+#&gt; * Hypotheses: self_pref
+#&gt; * Data: kin
+#&gt; * Analyses: trust, recip
+#&gt; 
+#&gt; Hypothesis self_pref: Cues of kinship will increase prosocial behaviour. Cues of kinship will be manipulated by morphed facial self-resemblance. Prosocial behaviour will be measured by responses in the trust game. The prediction is that the number of trusting AND/OR reciprocating moves will be greater to self morphs than to other morphs.
+#&gt; 
+#&gt; Criterion trust_lowbound:
+#&gt; * conf.int[1] &gt; 0 is TRUE
+#&gt; * conf.int[1] = 0.021
+#&gt; 
+#&gt; Criterion trust_highbound:
+#&gt; * conf.int[2] &gt; 0.2 is TRUE
+#&gt; * conf.int[2] = 0.979
+#&gt; 
+#&gt; Criterion recip_lowbound:
+#&gt; * conf.int[1] &gt; 0 is FALSE
+#&gt; * conf.int[1] = -0.509
+#&gt; 
+#&gt; Criterion recip_highbound:
+#&gt; * conf.int[2] &gt; 0.2 is TRUE
+#&gt; * conf.int[2] = 0.426
+#&gt; 
+#&gt; Conclusion: corroborate
+#&gt; * Corroborate ((trust_lowbound &amp; trust_highbound) | (recip_lowbound &amp; recip_highbound)): TRUE
+#&gt; * Falsify (!trust_highbound &amp; !recip_highbound): FALSE</code></pre>
 </div>
 
 
@@ -1727,7 +1765,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
