@@ -362,7 +362,7 @@ summary {
 
 
 <h1 class="title toc-ignore">Evaluation of Statistical Hypotheses</h1>
-<h4 class="date">21 July, 2020</h4>
+<h4 class="date">24 July, 2020</h4>
 
 </div>
 
@@ -391,23 +391,23 @@ summary {
 <h3>Hypothesis 1: self_pref</h3>
 <p>Cues of kinship will increase prosocial behaviour. Cues of kinship will be manipulated by morphed facial self-resemblance. Prosocial behaviour will be measured by responses in the trust game. The prediction is that the number of trusting AND/OR reciprocating moves will be greater to self morphs than to other morphs.</p>
 <ul>
-<li><code>trust_lowbound</code> is confirmed if analysis <a href="#trust">trust</a> yields conf.int[1] &gt; 0 The result was conf.int[1] = 0.021 (<span style="color:green;">TRUE</span>)<br />
+<li><code>t_lo</code> is confirmed if analysis <a href="#trust">trust</a> yields conf.int[1] &gt; 0 The result was conf.int[1] = 0.021 (<span style="color:green;">TRUE</span>)<br />
 </li>
-<li><code>trust_highbound</code> is confirmed if analysis <a href="#trust">trust</a> yields conf.int[2] &gt; 0.2 The result was conf.int[2] = 0.979 (<span style="color:green;">TRUE</span>)<br />
+<li><code>t_hi</code> is confirmed if analysis <a href="#trust">trust</a> yields conf.int[2] &gt; 0.2 The result was conf.int[2] = 0.979 (<span style="color:green;">TRUE</span>)<br />
 </li>
-<li><code>recip_lowbound</code> is confirmed if analysis <a href="#recip">recip</a> yields conf.int[1] &gt; 0 The result was conf.int[1] = -0.509 (<span style="color:red;">FALSE</span>)<br />
+<li><code>r_lo</code> is confirmed if analysis <a href="#recip">recip</a> yields conf.int[1] &gt; 0 The result was conf.int[1] = -0.509 (<span style="color:red;">FALSE</span>)<br />
 </li>
-<li><code>recip_highbound</code> is confirmed if analysis <a href="#recip">recip</a> yields conf.int[2] &gt; 0.2 The result was conf.int[2] = 0.426 (<span style="color:green;">TRUE</span>)</li>
+<li><code>r_hi</code> is confirmed if analysis <a href="#recip">recip</a> yields conf.int[2] &gt; 0.2 The result was conf.int[2] = 0.426 (<span style="color:green;">TRUE</span>)</li>
 </ul>
 <div id="corroboration-true" class="section level4">
 <h4>Corroboration (<span style="color:green">TRUE</span>)</h4>
 <p>The hypothesis is corroborated if the 97.5% CI lower bound is greater than 0 and the 97.5% CI upper bound is greater than 0.2 (the SESOI) for either the trust or reciprocation moves.</p>
-<pre><code>(trust_lowbound &amp; trust_highbound) | (recip_lowbound &amp; recip_highbound)</code></pre>
+<pre><code>(t_lo &amp; t_hi) | (r_lo &amp; r_hi)</code></pre>
 </div>
 <div id="falsification-false" class="section level4">
 <h4>Falsification (<span style="color:red">FALSE</span>)</h4>
 <p>The hypothesis is falsified if the 97.5% CI upper bound is smaller than 0.2 (the SESOI) for both trust and reciprocation.</p>
-<pre><code>!trust_highbound &amp; !recip_highbound</code></pre>
+<pre><code>!t_hi &amp; !r_hi</code></pre>
 <p><span style="color: green"><strong>All criteria were met for corroboration.</strong></span></p>
 </div>
 </div>

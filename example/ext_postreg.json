@@ -137,12 +137,12 @@
             ],
             "corroboration": {
                 "description": "The hypothesis is corroborated if the 97.5% CI lower bound is greater than 0 and the 97.5% CI upper bound is greater than 0.2 (the SESOI) for either the trust or reciprocation moves. Use t.test if the data are normally distributed, or Wilcox test otherwise.",
-                "evaluation": "\n                  (ts_norm & to_norm & t_lo & t_hi) | \n                  (!(ts_norm & to_norm) & t_lo_w & t_hi_w) | \n                  (rs_norm & ro_norm & r_lo & r_hi) | \n                  (!(rs_norm & ro_norm) & r_lo_w & r_hi_w)",
+                "evaluation": "(ts_norm & to_norm & t_lo & t_hi) | \n                   (!(ts_norm & to_norm) & t_lo_w & t_hi_w) | \n                   (rs_norm & ro_norm & r_lo & r_hi) | \n                   (!(rs_norm & ro_norm) & r_lo_w & r_hi_w)",
                 "result": false
             },
             "falsification": {
                 "description": "The hypothesis is falsified if the 97.5% CI upper bound is smaller than 0.2 (the SESOI) for both trust and reciprocation. Use t.test if the data are normally distributed, or Wilcox test otherwise.",
-                "evaluation": "\n                  ( (ts_norm & to_norm & !t_hi) |\n                    (!(ts_norm & to_norm) & !t_hi_w) ) & \n                  ( (rs_norm & ro_norm & !r_hi) |\n                    (!(rs_norm & ro_norm) & !r_hi_w) )",
+                "evaluation": "( (ts_norm & to_norm & !t_hi) |\n                     (!(ts_norm & to_norm) & !t_hi_w) ) & \n                   ( (rs_norm & ro_norm & !r_hi) |\n                     (!(rs_norm & ro_norm) & !r_hi_w) )",
                 "result": false
             },
             "conclusion": "inconclusive"
@@ -163,28 +163,24 @@
                         "@type": "PropertyValue",
                         "name": "trust_self",
                         "description": "Number of trusting moves towards self-morphs",
-                        "type": "int",
                         "dataType": "int"
                     },
                     {
                         "@type": "PropertyValue",
                         "name": "trust_other",
                         "description": "Number of trusting moves towards self-morphs",
-                        "type": "int",
                         "dataType": "int"
                     },
                     {
                         "@type": "PropertyValue",
                         "name": "recip_self",
                         "description": "Number of reciprocating moves towards other-morphs",
-                        "type": "int",
                         "dataType": "int"
                     },
                     {
                         "@type": "PropertyValue",
                         "name": "recip_other",
                         "description": "Number of reciprocating moves towards other-morphs",
-                        "type": "int",
                         "dataType": "int"
                     }
                 ]
