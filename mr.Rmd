@@ -124,6 +124,8 @@ We provide an [R script](example/example.Rmd) with a concrete example of a machi
 
 The top level list (Box 1) contains components describing different aspects of the study, such as authors, hypotheses, materials, methods, data, and analyses. In the future we might be able to describe all meta-data pointing to information in a scientific article that we would like to be able to retrieve, but here we will focus on the aspects of the study that are required to make statistical predictions machine readable. To achieve this, we need a meta-data file that specifies the hypotheses, the analyses, and the evaluation criteria for each prediction.
 
+The meta-data file is structured as a JSON (JavaScript Object Notation) object, which is a list of keys and values, separated by a colon. The list items are separated by commas and surrounded by curly brackets (see Box 1). The basic structure requires keys for the study name, info, authors, hypotheses, methods, data, and analyses. All values except the name default to an empty array "[]" where these components can be later added.
+
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 1. The top-level structure of the machine-readable study description.]
 \begin{verbatim}
 {
@@ -176,7 +178,7 @@ Each criterion (Box 3) needs an `id` to be able to reference it in the evaluatio
             ...
             "criteria": [
                 {
-                    "id": "trust_lowbound",
+                    "id": "t_lo",
                     "analysis_id": "trust",
                     "result": "conf.int[1]",
                     "operator": ">",
@@ -184,7 +186,7 @@ Each criterion (Box 3) needs an `id` to be able to reference it in the evaluatio
                     "conclusion": true
                 },
                 {
-                    "id": "trust_highbound",
+                    "id": "t_hi",
                     "analysis_id": "trust",
                     "result": "conf.int[2]",
                     "operator": ">",
@@ -192,7 +194,7 @@ Each criterion (Box 3) needs an `id` to be able to reference it in the evaluatio
                     "conclusion": true
                 },
                 {
-                    "id": "recip_lowbound",
+                    "id": "r_lo",
                     "analysis_id": "recip",
                     "result": "conf.int[1]",
                     "operator": ">",
@@ -200,14 +202,14 @@ Each criterion (Box 3) needs an `id` to be able to reference it in the evaluatio
                     "conclusion": false
                 },
                 {
-                    "id": "recip_highbound",
+                    "id": "r_hi",
                     "analysis_id": "recip",
                     "result": "conf.int[2]",
                     "operator": ">",
                     "comparator": 0.2,
                     "conclusion": true
                 }
-            ]
+            ],
         },
         ...
     ]
@@ -216,7 +218,7 @@ Each criterion (Box 3) needs an `id` to be able to reference it in the evaluatio
 
 ### Hypothesis Evaluation
 
-The `corroboration` and `falsification` sub-components (Box 4) describe rules to determine corroboration or falsification of a hypothesis from the criteria conclusions, and each consists of three elements. The `description` element contains verbal descriptions of the decision rules for concluding the hypothesis is corroborated or falsified. The `evaluation` element contains a logical version referencing the criteria `id`. For example, "`(trust_lowbound & trust_highbound) | (recip_lowbound & recip_highbound)`" means that the corroboration `result` will be set to "true" if the first two criteria are both true, or if the last two criteria are both true, while "`!trust_highbound & !recip_highbound`" means that the falsify conclusion will be set to "true" if both of these criteria are false (note that an exclamation mark means 'not'). 
+The `corroboration` and `falsification` sub-components (Box 4) describe rules to determine corroboration or falsification of a hypothesis from the criteria conclusions, and each consists of three elements. The `description` element contains verbal descriptions of the decision rules for concluding the hypothesis is corroborated or falsified. The `evaluation` element contains a logical version referencing the criteria `id`. For example, "`(t_lo & t_hi) | (r_lo & r_hi)`" means that the corroboration `result` will be set to "true" if the first two criteria are both true, or if the last two criteria are both true, while "`!t_hi & !r_hi`" means that the falsify conclusion will be set to "true" if both of these criteria are false (note that an exclamation mark means 'not'). 
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 4. Corroboration and falsification rules.]
 \begin{verbatim}
@@ -224,23 +226,22 @@ The `corroboration` and `falsification` sub-components (Box 4) describe rules to
         {
             ...
             "corroboration": {
-                "description": "The hypothesis is corroborated if the
-                                97.5% CI lower bound is greater than 0
-                                and the 97.5% CI upper bound is greater
-                                than 0.2 (the SESOI) for either the
-                                trust or reciprocation moves.",
-                "evaluation": "(trust_lowbound & trust_highbound) |
-                               (recip_lowbound & recip_highbound)",
+                "description": "The hypothesis is corroborated if the 
+                                97.5% CI lower bound is greater than 0 
+                                and the 97.5%  CI upper bound is 
+                                greater than 0.2 (the SESOI) for either 
+                                the trust or reciprocation moves.",
+                "evaluation": "(t_lo & t_hi) | (r_lo & r_hi)",
                 "result": true
             },
             "falsification": {
-                "description": "The hypothesis is falsified if the
-                                97.5% CI upper bound is smaller than
-                                0.2 (the SESOI) for both trust and
+                "description": "The hypothesis is falsified if the 
+                                97.5% CI upper bound is smaller than 
+                                0.2 (the SESOI) for both trust and 
                                 reciprocation.",
-                "evaluation": "!trust_highbound & !recip_highbound",
+                "evaluation": "!t_hi & !r_hi",
                 "result": false
-            }
+            },
         }
     ]
 \end{verbatim}
@@ -248,28 +249,46 @@ The `corroboration` and `falsification` sub-components (Box 4) describe rules to
 
 ### Analyses
 
-Each analysis is specified in the `analysis` component (Box 5). An analysis consists of an `id` to reference the statistical test when evaluating the criteria and the `code` used to run the analysis. Once data are attached and the analyses are run, a list of named `results` is added to be referenced in the criteria. Each analysis can also contain additional information, such as the software used to perform the analysis. The example below specifies two *t*-tests, using the `t.test` function in R. In the working scienceverse prototype used in this manuscript, short analyses can be added directly, while longer analysis scripts that return a test result can be added by referencing to an external analysis script.
+Each analysis is specified in the `analysis` component (Box 5). An analysis consists of an `id` to reference the statistical test when evaluating the criteria and the `code` used to run the analysis. Once data are attached and the analyses are run, a list of named `results` is added to be referenced in the criteria. Each analysis can also contain additional information, such as the software used to perform the analysis. The example below specifies two *t*-tests, using the `t.test` function in R. In the working scienceverse prototype used in this manuscript, short analyses can be added directly, while longer analysis scripts that return a test result can be added by referencing an external analysis script.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 5. The analysis component.]
 \begin{verbatim}
     "analyses": [
         {
             "id": "trust",
-            "code": [
-                "t.test(kin$trust_self, kin$trust_other, 
-                            paired = TRUE, conf.level = 0.975)"
-            ],
-            "software": "R version 3.6.2 (2019-12-12)",
-            "results": { ...Box 7... }
+            "code": "    t.test(kin$trust_self, kin$trust_other, 
+                                paired = TRUE, conf.level = 0.975)",
+            "software": "R version 4.0.2 (2020-06-22)",
+            "results": {
+                "statistic": 2.5045,
+                "parameter": 23,
+                "p.value": 0.0198,
+                "conf.int": [0.0213, 0.9787],
+                "estimate": 0.5,
+                "null.value": 0,
+                "stderr": 0.1996,
+                "alternative": "two.sided",
+                "method": "Paired t-test",
+                "data.name": "kin$trust_self and kin$trust_other"
+            }
         },
         {
             "id": "recip",
-            "code": [
-                "t.test(kin$recip_self, kin$recip_other, 
-                            paired = TRUE, conf.level = 0.975)"
-            ],
-            "software": "R version 3.6.2 (2019-12-12)",
-            "results": { ...Box 7... }
+            "code": "    t.test(kin$recip_self, kin$recip_other, 
+                                paired = TRUE, conf.level = 0.975)",
+            "software": "R version 4.0.2 (2020-06-22)",
+            "results": {
+                "statistic": -0.2138,
+                "parameter": 23,
+                "p.value": 0.8326,
+                "conf.int": [-0.5089, 0.4256],
+                "estimate": -0.0417,
+                "null.value": 0,
+                "stderr": 0.1949,
+                "alternative": "two.sided",
+                "method": "Paired t-test",
+                "data.name": "kin$recip_self and kin$recip_other"
+            }
         }
     ]
 \end{verbatim}
@@ -277,9 +296,9 @@ Each analysis is specified in the `analysis` component (Box 5). An analysis cons
 
 ### Data
 
-Each dataset can be specified in the `data` component (Box 6). A dataset consists of an `id` to reference the dataset in analyses and other information such as how to obtain the data (e.g., `doi`, `url`). The `codebook` contains descriptions of each column, but it is even possible to include the `data` itself in this component. By storing the data underlying the reported analyses as nested lists in the same file together with good meta-data, a reported analysis could be completely reproduced in the future with a single command. Furthermore, it becomes very easy to perform additional analyses or sensitivity analyses on the data. 
+Each dataset can be specified in the `data` component (Box 6). A dataset consists of an `id` to reference the dataset in analyses and other information such as how to obtain the data (e.g., `doi`, `url`). The `codebook` contains descriptions of each column, but it is even possible to include the `data` itself in this component. By storing the data underlying the reported analyses as nested lists in the same file together with good meta-data, a reported analysis could be completely reproduced in the future from a single file. Furthermore, it becomes very easy to perform additional analyses or sensitivity analyses on the data. 
 
-The example Box 6 is a data component with a codebook created by scienceverse using the [Psych-DS 0.1.0](https://docs.google.com/document/d/1u8o5jnWk0Iqp_J06PTu5NjBfVsdoPbBhstht6W0fFp0/edit#heading=h.caxnnxqaobj) format, which is currently still in development. The descriptors for each column can be arbitrarily detailed, or follow other meta-data formats. For other software that helps researchers to create and share machine-readable codebooks, see @arslan2019.
+Box 6 contains a data component with a codebook created by scienceverse using the [Psych-DS 0.1.0](https://docs.google.com/document/d/1u8o5jnWk0Iqp_J06PTu5NjBfVsdoPbBhstht6W0fFp0/edit#heading=h.caxnnxqaobj) format, which is currently still in development. The descriptors for each column can be arbitrarily detailed, or follow other meta-data formats. For other software that helps researchers to create and share machine-readable codebooks, see @arslan2019.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 6. The data component.]
 \begin{verbatim}
@@ -293,50 +312,50 @@ The example Box 6 is a data component with a codebook created by scienceverse us
                 "schemaVersion": "Psych-DS 0.1.0",
                 "url": "https://osf.io/ewfhs/",
                 "variableMeasured": [
-                    {   "@type": "PropertyValue",
+                    {
+                        "@type": "PropertyValue",
                         "name": "trust_self",
-                        "description": "Number of trusting moves
-                                        towards self-morphs",
-                        "type": "int"
+                        "description": "Number of trusting moves towards self-morphs",
+                        "dataType": "int"
                     },
-                    {   "@type": "PropertyValue",
+                    {
+                        "@type": "PropertyValue",
                         "name": "trust_other",
-                        "description": "Number of trusting moves
-                                        towards self-morphs",
-                        "type": "int"
+                        "description": "Number of trusting moves towards self-morphs",
+                        "dataType": "int"
                     },
-                    {   "@type": "PropertyValue",
+                    {
+                        "@type": "PropertyValue",
                         "name": "recip_self",
-                        "description": "Number of reciprocating moves 
-                                        towards other-morphs",
-                        "type": "int"
+                        "description": "Number of reciprocating moves towards other-morphs",
+                        "dataType": "int"
                     },
-                    {   "@type": "PropertyValue",
+                    {
+                        "@type": "PropertyValue",
                         "name": "recip_other",
-                        "description": "Number of reciprocating moves
-                                        towards other-morphs",
-                        "type": "int"
+                        "description": "Number of reciprocating moves towards other-morphs",
+                        "dataType": "int"
                     }
                 ]
             },
             "data": {
                 "trust_self": [1, 2, 2, 1, 1, 1, 1, 1, 2, 0, 2, 0, 
                                1, 2, 2, 3, 2, 2, 1, 1, 2, 0, 0, 1],
-                "trust_other": [1, 2, 2, 0, 1, 0, 0, 0, 1, 0, 1, 0,
+                "trust_other": [1, 2, 2, 0, 1, 0, 0, 0, 1, 0, 1, 0, 
                                 1, 1, 1, 0, 1, 2, 2, 0, 0, 0, 2, 1],
-                "recip_self": [0, 1, 3, 2, 1, 1, 1, 3, 3, 2, 3, 1,
+                "recip_self": [0, 1, 3, 2, 1, 1, 1, 3, 3, 2, 3, 1, 
                                1, 2, 3, 3, 3, 1, 1, 1, 3, 0, 3, 1],
-                "recip_other": [1, 1, 2, 2, 3, 2, 1, 3, 3, 1, 3, 0,
+                "recip_other": [1, 1, 2, 2, 3, 2, 1, 3, 3, 1, 3, 0, 
                                 1, 3, 3, 3, 3, 0, 3, 0, 1, 0, 3, 2]
             }
         }
-    ]
+    ],
 \end{verbatim}
 \end{tcolorbox}
 
 ### Automatic Evaluation
 
-Now that the prediction is specified in a machine readable format, it is possible for the statistical prediction to be evaluated automatically. Automatic evaluation of machine readable hypotheses has at least two useful functions during the peer review process. First, we foresee a future where researchers are required to submit fully computationally reproducible analysis scripts with their submissions. This will require editorial assistants or reviewers to check the computational reproducibility of the reported results in a manuscript. Machine-readable hypothesis tests would make this check a matter of running a single function. For example, based on the information specified in the analyses, criteria, and data components, the `study_analyze` function in scienceverse demonstrates how it is possible to run a single function to read in the analytic data, perform each  analysis, and store and evaluate the results. For example, running the `study_analyze` function will automatically load the data as the object "kin", and perform the "trust" analysis by running the analysis `t.test(x = kin$trust_self, y = kin$trust_other, paired = TRUE, conf.level = .975)`. The result of this analysis is automaticaly stored (e.g., the t.test function in R returns a list of named numbers, including "conf.int": [0.0213, 0.9787]). The criteria are then evaluated against the results of the analyses. For example, because the first number in the "conf.int" result (0.0213) is larger (">") than zero ("0"), the conclusion that this criterion is "true" will be stored (see Box 3). 
+Now that the prediction is specified in a machine readable format, it is possible for the statistical prediction to be evaluated automatically. Automatic evaluation of machine readable hypotheses has at least two useful functions during the peer review process. First, we foresee a future where researchers are required to submit fully computationally reproducible analysis scripts with their submissions. This will require editorial assistants or reviewers to check the computational reproducibility of the reported results in a manuscript. Machine-readable hypothesis tests would make this check a matter of running a single function. Based on the information specified in the analyses, criteria, and data components, the `study_analyze` function in scienceverse reads in the analytic data, performs each analysis, and stores and evaluates the results. In the example above, running the `study_analyze` function will automatically load the data as the object "kin", and perform the "trust" analysis by running the analysis `t.test(x = kin$trust_self, y = kin$trust_other, paired = TRUE, conf.level = .975)`. The result of this analysis is automatically stored (e.g., the t.test function in R returns a list of named numbers, including "conf.int": [0.0213, 0.9787]). The criteria are then evaluated against the results of the analyses. For example, because the first number in the "conf.int" result (0.0213) is larger (">") than zero ("0"), the conclusion that this criterion is "true" will be stored (see Box 3). 
 
 After the `study_analyze` function has drawn conclusions about whether each criterion is met or not, based on the results of the analyses, the evaluation rules can be used to determine whether the prediction is corroborated, falsified, or neither (and thus the results are inconclusive). For the prediction to be corroborated, the criteria for "trust_lowbound" and "trust_highbound" have to be met, and/or the criteria for "recip_lowbound" and "recip_highbound" have to be met. Since the conclusions for "trust_lowbound" and "trust_highbound" are both true, the prediction is corroborated, and because it is not true that both upper bounds for the confidence interval are smaller than 0.2, the prediction is not falsified. The overall `conclusion` is therefore that our statistical prediction is corroborated. It will typically be useful to create a human readable summary. This can be done with the `study_save` function, which created output as presented in Figure 1 below. Such a human-readable summary would allow editorial assistants or reviewers to quickly check the computational reproducibility of the reported results.
 
