@@ -69,19 +69,83 @@
                     "operator": ">",
                     "comparator": 0.2,
                     "conclusion": true
+                },
+                {
+                    "id": "ts_norm",
+                    "analysis_id": "norm",
+                    "result": "ts",
+                    "operator": ">",
+                    "comparator": 0.05,
+                    "conclusion": false
+                },
+                {
+                    "id": "to_norm",
+                    "analysis_id": "norm",
+                    "result": "to",
+                    "operator": ">",
+                    "comparator": 0.05,
+                    "conclusion": false
+                },
+                {
+                    "id": "rs_norm",
+                    "analysis_id": "norm",
+                    "result": "rs",
+                    "operator": ">",
+                    "comparator": 0.05,
+                    "conclusion": false
+                },
+                {
+                    "id": "ro_norm",
+                    "analysis_id": "norm",
+                    "result": "ro",
+                    "operator": ">",
+                    "comparator": 0.05,
+                    "conclusion": false
+                },
+                {
+                    "id": "t_lo_w",
+                    "analysis_id": "trust_wilcox",
+                    "result": "conf.int[1]",
+                    "operator": ">",
+                    "comparator": 0,
+                    "conclusion": false
+                },
+                {
+                    "id": "t_hi_w",
+                    "analysis_id": "trust_wilcox",
+                    "result": "conf.int[2]",
+                    "operator": ">",
+                    "comparator": 0.2,
+                    "conclusion": true
+                },
+                {
+                    "id": "r_lo_w",
+                    "analysis_id": "recip_wilcox",
+                    "result": "conf.int[1]",
+                    "operator": ">",
+                    "comparator": 0,
+                    "conclusion": false
+                },
+                {
+                    "id": "r_hi_w",
+                    "analysis_id": "recip_wilcox",
+                    "result": "conf.int[2]",
+                    "operator": ">",
+                    "comparator": 0.2,
+                    "conclusion": true
                 }
             ],
             "corroboration": {
-                "description": "The hypothesis is corroborated if the 97.5% CI lower bound is greater than 0 and the 97.5% CI upper bound is greater than 0.2 (the SESOI) for either the trust or reciprocation moves.",
-                "evaluation": "(t_lo & t_hi) | (r_lo & r_hi)",
-                "result": true
-            },
-            "falsification": {
-                "description": "The hypothesis is falsified if the 97.5% CI upper bound is smaller than 0.2 (the SESOI) for both trust and reciprocation.",
-                "evaluation": "!t_hi & !r_hi",
+                "description": "The hypothesis is corroborated if the 97.5% CI lower bound is greater than 0 and the 97.5% CI upper bound is greater than 0.2 (the SESOI) for either the trust or reciprocation moves. Use t.test if the data are normally distributed, or Wilcox test otherwise.",
+                "evaluation": "(ts_norm & to_norm & t_lo & t_hi) | \n                   (!(ts_norm & to_norm) & t_lo_w & t_hi_w) | \n                   (rs_norm & ro_norm & r_lo & r_hi) | \n                   (!(rs_norm & ro_norm) & r_lo_w & r_hi_w)",
                 "result": false
             },
-            "conclusion": "corroborate"
+            "falsification": {
+                "description": "The hypothesis is falsified if the 97.5% CI upper bound is smaller than 0.2 (the SESOI) for both trust and reciprocation. Use t.test if the data are normally distributed, or Wilcox test otherwise.",
+                "evaluation": "( (ts_norm & to_norm & !t_hi) |\n                     (!(ts_norm & to_norm) & !t_hi_w) ) & \n                   ( (rs_norm & ro_norm & !r_hi) |\n                     (!(rs_norm & ro_norm) & !r_hi_w) )",
+                "result": false
+            },
+            "conclusion": "inconclusive"
         }
     ],
     "methods": [],
@@ -162,6 +226,63 @@
                 "alternative": "two.sided",
                 "method": "Paired t-test",
                 "data.name": "kin$recip_self and kin$recip_other"
+            }
+        },
+        {
+            "id": "norm",
+            "code": [
+                "    {",
+                "        ts <- shapiro.test(kin$trust_self)$p.value",
+                "        to <- shapiro.test(kin$trust_other)$p.value",
+                "        rs <- shapiro.test(kin$recip_self)$p.value",
+                "        ro <- shapiro.test(kin$recip_other)$p.value",
+                "    }",
+                "    list(ts = ts, to = to, rs = rs, ro = ro)"
+            ],
+            "software": "R version 4.0.0 (2020-04-24)",
+            "results": {
+                "ts": 0.0039,
+                "to": 0.0002,
+                "rs": 0.0004,
+                "ro": 0.0006
+            }
+        },
+        {
+            "id": "trust_wilcox",
+            "code": [
+                "    wilcox.test(kin$trust_self, kin$trust_other, paired = TRUE, ",
+                "        conf.level = 0.975, conf.int = TRUE)"
+            ],
+            "software": "R version 4.0.0 (2020-04-24)",
+            "results": {
+                "statistic": 86.5,
+                "parameter": {},
+                "p.value": 0.0259,
+                "null.value": 0,
+                "alternative": "two.sided",
+                "method": "Wilcoxon signed rank test with continuity correction",
+                "data.name": "kin$trust_self and kin$trust_other",
+                "conf.int": [-0, 1.5001],
+                "estimate": 1
+            }
+        },
+        {
+            "id": "recip_wilcox",
+            "code": [
+                "    wilcox.test(kin$recip_self, kin$recip_other, paired = TRUE, ",
+                "        conf.level = 0.975, conf.int = TRUE)"
+            ],
+            "software": "R version 4.0.0 (2020-04-24)",
+            "results": {
+                "statistic": 36,
+                "parameter": {},
+                "p.value": 0.8366,
+                "null.value": 0,
+                "alternative": "two.sided",
+                "method": "Wilcoxon signed rank test with continuity correction",
+                "data.name": "kin$recip_self and kin$recip_other",
+                "conf.int": [-1.5, 1],
+                "estimate": -0
             }
         }
     ]
