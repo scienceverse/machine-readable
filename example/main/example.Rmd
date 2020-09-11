@@ -77,6 +77,23 @@ study <- add_analysis(study, id = "trust",
                       software = R.version.string)
 ```
 
+If your analysis was run using other software or you only have summary statistics available, you can add a list of arbitrary named values like this (setting unknown values to `NA` for preregistration):
+
+```{r, eval = FALSE}
+study <- add_analysis(study, id = "tr_self",
+                      code = list(
+                        t = -2.50,
+                        df = 23,
+                        p = 0.0198,
+                        ci = c(-0.9787, -0.0213),
+                        estimate = -0.5,
+                        stderr = 0.2,
+                        description = "two-tailed paired t-test of trust_self vs recip_self"
+                      ), 
+                      software = "SPSS")
+```
+
+
 ## Criteria
 
 Next, add the criteria you will need to check to corroborate or falsify each hypothesis. Each criterion needs a unique `id` so you can reference it next in the evaluation. Then, optionally specify the `hypothesis_id` and `analysis_id` where you'll look for the result. If you omit these it will default to the last one added. For example, the analysis `trust` returns a list from the function `t.test`, which includes a value for `conf.int`. To see if the first number in this vector is larger than 0, set `result` to "conf.int[1]", `operator` to ">" , and `comparator` to $0$. The options for `operator` are ">", "<", "=", and "!=".

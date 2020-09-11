@@ -15,6 +15,9 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(scienceverse)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 ```
 
 The demo below extends the example from: 
@@ -171,6 +174,42 @@ You can also export a human-readable pre-registration using the built-in "prereg
 ```{r}
 study_save(study, "ext_prereg.html", format = "prereg")
 ```
+
+## Power Analysis
+
+If your data have a factorial design, you can add simulated data by describing the design parameters as for the `faux::sim_design` function. 
+
+```{r}
+study <- add_sim_data(study, data_id = "kin",
+                      within = list(game = c("trust", "recip"),
+                                    person = c("self", "other")), 
+                      n = 24, 
+                      mu = list(trust_self  = 1.2, 
+                                trust_other = 0.8, 
+                                recip_self  = 1.8, 
+                                recip_other = 1.8),
+                      sd = 0.8, r = 0.5)
+```
+
+The `study_power` function runs the specified number of replications: simulating your data, running the analyses, and evaluating the criteria to produce a summary of the proportion of simulation where each hypothesis was corroborated, falsified, or inconclusive.
+
+```{r}
+study <- study_power(study, rep = 100)
+```
+
+You can access the values for each criterion for each simulation with the function `get_power` (set `values = TRUE`). This returns a list of hypotheses and their associated criteria that you can then plot or further assess.
+
+```{r fig.cap = "Criteria values for 100 simulated studies"}
+power <- get_power(study, values = TRUE)
+
+as_tibble(power$self_pref$criteria) %>%
+  pivot_longer(t_lo:r_hi,
+               names_to = "criteria",
+               values_to = "value") %>%
+  ggplot(aes(value, color = criteria)) +
+  geom_density()
+```
+
 
 ## Data
 

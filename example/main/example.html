@@ -1564,6 +1564,18 @@ div.tocify {
                                     paired = TRUE,
                                     conf.level = 0.975), 
                       software = R.version.string)</code></pre>
+<p>If your analysis was run using other software or you only have summary statistics available, you can add a list of arbitrary named values like this (setting unknown values to <code>NA</code> for preregistration):</p>
+<pre class="r"><code>study &lt;- add_analysis(study, id = &quot;tr_self&quot;,
+                      code = list(
+                        t = -2.50,
+                        df = 23,
+                        p = 0.0198,
+                        ci = c(-0.9787, -0.0213),
+                        estimate = -0.5,
+                        stderr = 0.2,
+                        description = &quot;two-tailed paired t-test of trust_self vs recip_self&quot;
+                      ), 
+                      software = &quot;SPSS&quot;)</code></pre>
 </div>
 <div id="criteria" class="section level2">
 <h2>Criteria</h2>

@@ -18,9 +18,7 @@ knitr::opts_chunk$set(
 ```{r setup, message=FALSE}
 # devtools::install_github("scienceverse/scienceverse")
 # devtools::install_github("FBartos/zcurve")
-# devtools::install_github("debruine/faux")
 library(scienceverse)
-library(faux)
 library(zcurve)
 library(dplyr)
 library(metafor)
