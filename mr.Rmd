@@ -116,8 +116,7 @@ As highlighted above, one limitation of current practice when testing hypotheses
 
 There are different approaches that can be used to statistically conclude that the prediction made in a study is falsified. In practice, corroborating or falsifying a statistical prediction in a single study is rarely sufficient to draw strong conclusions about a theory [@lakatos1978], and one should always keep random variation in mind when interpreting statistical results. One approach to conclude a prediction is falsified is known as equivalence testing [@lakens2018]. An equivalence test requires researchers to specify a smallest effect size of interest, and tests if the presence of an effect that is large enough to be deemed interesting can be statistically rejected. 
 
-Continuing our example, we might conclude our prediction is corroborated when we can statistically conclude the observed mean difference is greater than zero, and not statistically smaller than the smallest effect size we care about. The prediction would be falsified if the effect is statistically smaller than the smallest effect size of interest, and inconclusive if we can neither conclude the effect is statistically greater than zero, nor statistically smaller than the smallest effect size we care about. If our statistical test is a dependent *t*-test, our test result is the upper and lower bound of a 97.5% confidence interval (i.e., a hypothesis test with a Bonferroni corrected alpha level of 2.5%), and our smallest effect size of interest is 0.2, we can conclude that we have corroborated our prediction if the lower bound of our 97.5% CI is larger than 0 and the upper bound is not smaller than 0.2. Our prediction is falsified if the upper bound of our 97.5% CI is smaller than 0.2, and our data is inconclusive in all other situations. 
-
+Continuing our example, we might conclude our prediction is corroborated when we can statistically conclude the observed mean difference for the trust measure, or the reciprocation measure, or both, is greater than zero, and neither are statistically smaller than the smallest effect size we care about. The prediction would be falsified if both effects are statistically smaller than the smallest effect size of interest, and inconclusive if we can neither conclude either effect is statistically greater than zero, nor statistically smaller than the smallest effect size we care about. If our statistical test is a dependent *t*-test, our test result is the upper and lower bound of a 97.5% confidence interval (i.e., a hypothesis test with a Bonferroni corrected alpha level of 2.5%), and our smallest effect size of interest is 0.2, we can conclude that we have corroborated our prediction if the lower bound of our 97.5% confidence intervals are larger than 0 and the upper bound is not smaller than 0.2. We decide that our prediction is falsified if the upper bound of our 97.5% confidence intervals are smaller than 0.2, and our data is inconclusive in all other situations. 
 
 ## Computationally Evaluating Hypotheses
 
@@ -307,6 +306,14 @@ Each dataset can be specified in the `data` component (Box 6). A dataset consist
 
 Box 6 contains a data component with a codebook created by scienceverse using the [Psych-DS 0.1.0](https://docs.google.com/document/d/1u8o5jnWk0Iqp_J06PTu5NjBfVsdoPbBhstht6W0fFp0/edit#heading=h.caxnnxqaobj) format, which is currently still in development. The descriptors for each column can be arbitrarily detailed, or follow other meta-data formats. For other software that helps researchers to create and share machine-readable codebooks, see @arslan2019.
 
+### Automatic Evaluation
+
+Now that the prediction is specified in a machine readable format, it is possible for the statistical prediction to be evaluated automatically. Automatic evaluation of machine readable hypotheses has at least two useful functions during the peer review process. First, we foresee a future where researchers are required to submit fully computationally reproducible analysis scripts with their submissions. This will require editorial assistants or reviewers to check the computational reproducibility of the reported results in a manuscript. Machine-readable hypothesis tests would make this check a matter of running a single function. The scienceverse R package can do this for code written in R, and a machine-readable format makes it straightforward to create scripts that automatically run analyses in other languages.
+
+Based on the information specified in the analyses, criteria, and data components, the `study_analyze` function in scienceverse reads in the analytic data, performs each analysis, and stores and evaluates the results. In the example above, running the `study_analyze` function will automatically load the data as the object "kin", and perform the "trust" analysis by running the analysis `t.test(x = kin$trust_self, y = kin$trust_other, paired = TRUE, conf.level = .975)`. The result of this analysis is automatically stored (e.g., the t.test function in R returns a list of named numbers, including "conf.int": [0.0213, 0.9787]). The criteria are then evaluated against the results of the analyses. For example, because the first number in the "conf.int" result (0.0213) is larger (">") than zero ("0"), the conclusion that this criterion is "true" will be stored (see Box 3). 
+
+After the `study_analyze` function has drawn conclusions about whether each criterion is met or not, based on the results of the analyses, the evaluation rules can be used to determine whether the prediction is corroborated, falsified, or neither (and thus the results are inconclusive). For the prediction to be corroborated, the criteria for "t_lo" and "t_hi" have to be met, and/or the criteria for "r_lo" and "r_hi" have to be met. Since the conclusions for "t_lo" and "t_hi" are both true, the prediction is corroborated, and because it is not true that both upper bounds for the confidence interval are smaller than 0.2, the prediction is not falsified. The overall `conclusion` is therefore that our statistical prediction is corroborated. It will typically be useful to create a human-readable summary. This can be done with the `study_save` function, which created output as presented in Figure 1 below. Such a human-readable summary would allow editorial assistants or reviewers to quickly check the computational reproducibility of the reported results.
+
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 6. The data component.]
 \begin{verbatim}
     "data": [
@@ -322,29 +329,25 @@ Box 6 contains a data component with a codebook created by scienceverse using th
                     {
                         "@type": "PropertyValue",
                         "name": "trust_self",
-                        "description": "Number of trusting moves 
-                                        towards self-morphs",
+                        "description": "Trusting moves self-morphs",
                         "dataType": "int"
                     },
                     {
                         "@type": "PropertyValue",
                         "name": "trust_other",
-                        "description": "Number of trusting moves 
-                                        towards other-morphs",
+                        "description": "Trusting moves other-morphs",
                         "dataType": "int"
                     },
                     {
                         "@type": "PropertyValue",
                         "name": "recip_self",
-                        "description": "Number of reciprocating moves 
-                                        towards self-morphs",
+                        "description": "Reciprocating moves self-morphs",
                         "dataType": "int"
                     },
                     {
                         "@type": "PropertyValue",
                         "name": "recip_other",
-                        "description": "Number of reciprocating moves 
-                                        towards other-morphs",
+                        "description": "Reciprocating moves other-morphs",
                         "dataType": "int"
                     }
                 ]
@@ -364,14 +367,6 @@ Box 6 contains a data component with a codebook created by scienceverse using th
 \end{verbatim}
 \end{tcolorbox}
 
-
-### Automatic Evaluation
-
-Now that the prediction is specified in a machine readable format, it is possible for the statistical prediction to be evaluated automatically. Automatic evaluation of machine readable hypotheses has at least two useful functions during the peer review process. First, we foresee a future where researchers are required to submit fully computationally reproducible analysis scripts with their submissions. This will require editorial assistants or reviewers to check the computational reproducibility of the reported results in a manuscript. Machine-readable hypothesis tests would make this check a matter of running a single function. The scienceverse R package can do this for code written in R, and a machine-readable format makes it straightforward to create scripts that automatically run analyses in other languages.
-
-Based on the information specified in the analyses, criteria, and data components, the `study_analyze` function in scienceverse reads in the analytic data, performs each analysis, and stores and evaluates the results. In the example above, running the `study_analyze` function will automatically load the data as the object "kin", and perform the "trust" analysis by running the analysis `t.test(x = kin$trust_self, y = kin$trust_other, paired = TRUE, conf.level = .975)`. The result of this analysis is automatically stored (e.g., the t.test function in R returns a list of named numbers, including "conf.int": [0.0213, 0.9787]). The criteria are then evaluated against the results of the analyses. For example, because the first number in the "conf.int" result (0.0213) is larger (">") than zero ("0"), the conclusion that this criterion is "true" will be stored (see Box 3). 
-
-After the `study_analyze` function has drawn conclusions about whether each criterion is met or not, based on the results of the analyses, the evaluation rules can be used to determine whether the prediction is corroborated, falsified, or neither (and thus the results are inconclusive). For the prediction to be corroborated, the criteria for "t_lo" and "t_hi" have to be met, and/or the criteria for "r_lo" and "r_hi" have to be met. Since the conclusions for "t_lo" and "t_hi" are both true, the prediction is corroborated, and because it is not true that both upper bounds for the confidence interval are smaller than 0.2, the prediction is not falsified. The overall `conclusion` is therefore that our statistical prediction is corroborated. It will typically be useful to create a human-readable summary. This can be done with the `study_save` function, which created output as presented in Figure 1 below. Such a human-readable summary would allow editorial assistants or reviewers to quickly check the computational reproducibility of the reported results.
 
 \begin{tcolorbox}[colback=black!5!white,colframe=white!5!black,title=Box 7. Results of data analysis.]
 \begin{verbatim}
@@ -442,9 +437,9 @@ To check the code in a preregistration, the scienceverse package has a function 
 
 ### Meta-analyses
 
-Researchers face several challenges when they want to examine research lines with meta-analytic techniques such as effect size meta-analysis, p-curve analysis [@simonsohn2014], or z-curve analysis [@brunner2020]. First, many scientific papers do not report the results of statistical tests in sufficient detail to include these studies in a meta-analysis. Effect sizes are often not computed, and although researchers performing a meta-analysis can attempt to manually calculate effect sizes, this requires access to the means, standard deviations, correlations for within comparisons, and exact sample sizes for each condition, which are also often missing. Effect sizes can sometimes still be approximated from test statistics, but these are often not reported for non-significant results. The second problem a researcher performing a meta-analysis faces is a lack of transparency about which statistical test in the results section is related to the theoretical predictions in the introduction section. This can make it difficult to select the best test to include in a meta-analysis.
+Researchers face several challenges when they want to examine research lines with meta-analytic techniques such as effect size meta-analysis, p-curve analysis [@simonsohn2014], or z-curve analysis [@brunner2020]. First, many scientific papers do not report the results of statistical tests in sufficient detail to include these studies in a meta-analysis. Effect sizes are often not computed, and although researchers performing a meta-analysis can attempt to manually calculate effect sizes, this requires access to the means, standard deviations, correlations for within comparisons, and exact sample sizes for each condition, which are also often missing. Effect sizes can sometimes still be approximated from test statistics, but these are often not reported for non-significant results. The second problem a researcher performing a meta-analysis faces is a lack of transparency about which statistical test in the results section is related to the theoretical predictions in the introduction section. This can make it difficult to select the appropriate test to include in a meta-analysis.
 
-The structured meta-study files we propose solve both these problems, as long as researchers 1) include the raw data in the meta-study file, and 2) specify for each hypothesis which statistical test result(s) will corroborate or falsify the predictions. In the [supplemental materials](example/meta_example/meta-vignette.html), we demonstrate how a z-curve and p-curve analysis can easily be performed based on the p-values stored in the results section of the meta-study file, and how the raw data across meta-study files can be used to identify shared variables across data sets and compute and analyze effect sizes in a meta-analysis.
+The structured meta-study files we propose solve both these problems, as long as researchers 1) include the raw data in the meta-study file, and 2) specify for each hypothesis which statistical test result(s) will corroborate or falsify the predictions. In the [online vignettes](https://scienceverse.github.io/scienceverse/articles/index.html), we demonstrate how a z-curve and *p*-curve analysis can easily be performed based on the *p*-values stored in the results section of the meta-study file, and how the raw data across meta-study files can be used to identify shared variables across data sets and compute and analyze effect sizes in a meta-analysis.
 
 ## Conclusions
 
@@ -478,7 +473,7 @@ LMD is supported by European Research Council grant #647910. DL is funded by VID
 
 
 ## Open Practices
-The code to reproduce this manuscript is available at https://github.com/scienceverse/machine-readable and the scienceverse R package and associated vignettes are available from https://github.com/scienceverse/scienceverse. 
+The code to reproduce this manuscript is available at https://github.com/scienceverse/machine-readable and the scienceverse R package and associated vignettes are available from https://scienceverse.github.io/scienceverse/articles/index.html.
 
 
 \newpage
